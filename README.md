@@ -473,7 +473,7 @@ You should be all done for now. All of these patches will be in `oc-additions.pl
 
 ## Issues and small fixes and whatever I can't put in a category lol
 
-#### Type C
+### Type C
 
 No (not now)
 
@@ -491,7 +491,7 @@ No (not now)
 | HSPC      | `0000000F` | X-Rite Pantone Color Sensor          | I                 | D                          |
 | HSPD      | `0000000E` | Bluetooth USB Port                   | I                 | E                          |
 
-#### WiFi Card replacement
+### WiFi Card replacement
 
 You will need to disassemble your laptop:
 
@@ -504,7 +504,7 @@ You will need to disassemble your laptop:
 6. Disconnect the TrackPoint and Keyboard ribbons (BE CAREFUL! THEY VERY FRAGILE)
 7. You have now access to the extra 2 RAM slots and WWAN and WLAN slots.
 
-##### Compatible WiFi Cards
+#### Compatible WiFi Cards
 
 As of now there are a lot of WiFi cards that are compatible:
 
