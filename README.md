@@ -124,6 +124,7 @@ A lot of things are working fine as expected:
     - Works on Chrome/Firefox just fine
 * Pen Pressure input, only works on 10.11 (you will have to do more work to get this running on 10.11, not covered here)
 * *to be filled when I remember something*
+* Hibernation (didnt test yet)
 
 ## Things I'm trying to fix atm and need help with
 
@@ -267,15 +268,15 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
       - `FwRuntimeServices` is already integrated in the OpenCorePkg zip in future releases.
     - Kexts
       - You do not need to use SMCSuperIO/LightSensor/BatteryManager
-      - You **MUST** use rehabman's VoodooPS2Controller kext and **NOT** acidanthera's because it's buggy with hard surface trackpads.
-      - IntelMausiEthernet from acidandanthera or Mieze (if you're doing the internet install)
+      - You **MUST** use rehabman's VoodooPS2Controller kext and **NOT** acidanthera's because it's buggy with hard surface trackpads. (;ink in the kext table down bellow)
+      - IntelMausiEthernet from acidandanthera or Mieze
       - There is no need for USBInjectAll, use `USBMap.kext` from this repo
       - You do not need to get all the kexts now, here is the list of the ones you really need for the installer:
         - VirtualSMC
         - Lilu
         - WhateverGreen
         - IntelMausi
-        - VoodooPS2Controller
+        - VoodooPS2Controller (rehabman)
         - USBMap
     - SSDTs
       - Take from this guide (this one, not the linked)
@@ -308,7 +309,7 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
             - For i7 models: Intel HD 530
 
               - No need for `device-id`
-              - Optional: `AAPL, ig-platform-id` = `00001619`
+              - Optional: `AAPL,ig-platform-id` = `00001619`
 
             - For **BOTH**: (our DVMT-prealloc is small, can't change it either)
 
@@ -348,7 +349,7 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
 
       - PlatformInfo
 
-        - Use `MacBookPro13,3` (better the latter)
+        - Use `MacBookPro13,3`
 
       - UEFI
 
@@ -399,12 +400,12 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
             * In case you have multiple drives with FAT32 partitions your EFI might be something different than FS0, always check the files inside the partition you chose by running `ls`.
          2. Type `FSX:` 
          3. Type `bcfg boot add 00 FSX:\EFI\BOOT\BOOTxOC.EFI "OpenCore Booter"`
-            - bcfg: Manages the boot and driver options that are stored in NVRAM. -- UEFI Spec sheet
-            - boot: what bcfg needs to change
-            - add: add entry
-            - 00: entry order in the list (00 being the very first entry)
-            - FSX:\EFI...: path to the EFI file
-            - "OpenCore Booter": name of the entry, you can choose whatever you want as long as it's 3 characters long and with the quotes.
+            - `bcfg`: Manages the boot and driver options that are stored in NVRAM. -- UEFI Spec sheet
+            - `boot`: what bcfg needs to change
+            - `add`: add entry
+            - `00`: entry order in the list (00 being the very first entry)
+            - `FSX:\EFI...`: path to the EFI file
+            - `"OpenCore Booter"`: name of the entry, you can choose whatever you want as long as it's 3 characters long and with the quotes.
          4. I recommend you run the same commands for `Shell.efi` to make it accessible from the UEFI Boot Menu in case you need to fix/check things.
          5. Press Ctrl + Alt + Del and your laptop will reboot
       8. After that a new entry for the BOOTxOC is made and your laptop will boot to OC automatically.
@@ -429,9 +430,9 @@ After installing macOS, getting OpenCore to boot, it's time to get the rest of i
 | SSDT-SBUS-MCHC         | *none*                                                       | Adds SBUS and MCHC devices, needed for macOS.                |
 | SSDT-Thinkpad_Trackpad | *none*                                                       | Contains VoodooPS2Controller settings to fix the TrackPoint jumpiness |
 | SSDT-USBX              | *none*                                                       | Adds USB properties for AppleBusPowerController for the USB ports, helps with the 10 W output support. |
-| SSDT-XCPM              | *none*                                                       | Adds `plugin-type` property to the CPU scope device, helps with CPU Power management. Contains CPUFriend Data. |
+| SSDT-XCPM              | *none*                                                       | Adds `plugin-type` property to the CPU scope device, helps with CPU Power management. Contains CPUFriend Data set to Power (not Performances). |
 | SSDT-XOSI              | _OSI to XOSI                                                 | Renames the _OSI (Operating System Interface Level) method so that we can add macOS identification in the SSDT, this way, features that would only be enabled if Windows was detected would be also available for macOS. In our case it actually doesn't really matter, but just to be sure that it doesn't limit anything later down the road on UEFI Firmware updates. |
-| *none*                 | Change SAT1 to SATA                                          | To enable proper compatibility with macOS SATA drivers (for power management). |
+| *none*                 | Change SAT1 to SATA                                          | To enable proper compatibility with macOS SATA drivers (for power management). You can also use ThirdPartyDrives in config.plist\Kernel\Quirks. |
 | *none*                 | FPU to MATH                                                  | To enable MATH device. macOS look for MATH device.           |
 | *none*                 | Change XHCI to XHC                                           | To disable macOS's auto-attachement to the XHCI device and applying the SMBIOS's native USB port mapping, we don't want that, and we're using our own USBMap anyways. |
 
