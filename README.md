@@ -539,7 +539,7 @@ By default, if you get proper screen resolution after macOS install, the screen 
 ### Documentations and guides that you must read/follow in case you need assistance:
 
 - [OpenCore Configuration](https://github.com/acidanthera/OpenCorePkg/raw/master/Docs/Configuration.pdf)
-- [OpenCore Vanilla Guide](https://khronokernel.github.io/Opencore-Vanilla-Desktop-Guide/)
+- [OpenCore Desktop Vanilla Guide](https://khronokernel.github.io/Opencore-Vanilla-Desktop-Guide/)
 - Rehabman's:
   - [ACPI patching guide](https://www.tonymacx86.com/threads/guide-patching-laptop-dsdt-ssdts.152573/)
   - [ACPI hot patching guide](https://www.tonymacx86.com/threads/guide-using-clover-to-hotpatch-acpi.200137/)
