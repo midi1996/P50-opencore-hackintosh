@@ -151,7 +151,7 @@ Make sure you're in UEFI mode, I'm not going to help you on legacy installs.
    2. Download a disk partitioning tool (like Minitool Partition Wizard, EaseUS, Aomei...), I DO NOT recommend Gparted as it may break NTFS and can create partition overlapping if you're not careful (if you're ok with it and sure about it, go for it).
    3. Resize your C: partition to leave at least 60GB from the right (because windows will be broken if you resize from the other side)
       - In case there are any partitions after the free space, move them at the end of the Windows partition (usually it's Recovery)
-      - In case the EFI partition is less than 100MB, make it larger by shrinking the windows partition from the side of the EFI by the amount you need to grow it and some more.
+      - In case the EFI partition is less than 200MB, make it larger by shrinking the windows partition from the side of the EFI by the amount you need to grow it and some more.
         - This is crucial as it will help use format it with APFS later on.
    4. Create an empty FAT32 partition in that free space (CRUCIAL, as macOS doesn't see "empty" space.)
    
@@ -247,7 +247,7 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
 2. Install macOS and get it booting
 3. Add extra stuff from this guide
 
-### [OpenCore Laptop Guide by 1Revenger1](https://1revenger1.gitbook.io/laptop-guide/prepare-install-macos/preparing-the-usb-media)
+### [OpenCore Laptop Guide by Dortania](https://dortania.github.io/vanilla-laptop-guide/)
 
 - Please follow the guide properly, and read it fully before doing anything and prepare the needed hardware (you can skip WiFi card replacement).
 
@@ -280,13 +280,13 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
         - USBMap
     - SSDTs
       - Take from this guide (this one, not the linked)
-        - SSDT-PLUG
+        - SSDT-XCPM
           - Will enable native CPU power management
         - SSDT-USBX
           - From this repo, we do not need to fake EC as we already have it properly named.
     - Tools:
-      - [Shell.efi](https://cdn.discordapp.com/attachments/573338611337003018/693559496462565447/Shell.efi)
-        - Needed for some extra setup. This should be used until Acidanthera releases OpenShell with the next OpenCore releases.
+      - Use OpenCore's OpenShell. ~~[Shell.efi](https://cdn.discordapp.com/attachments/573338611337003018/693559496462565447/Shell.efi)~~ 
+        - ~~Needed for some extra setup. This should be used until Acidanthera releases OpenShell with the next OpenCore releases.~~
 
   - OpenCore Template:
 
@@ -298,7 +298,7 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
 
         - `PciRoot(0x0)/Pci(0x2,0x0)`
 
-          - Follow [Display Configuration](https://1revenger1.gitbook.io/laptop-guide/prepare-install-macos/display-configuration)
+          - Follow [DeviceProperties](https://dortania.github.io/vanilla-laptop-guide/OpenCore/config-laptop.plist/skylake.html#deviceproperties)
 
             - For Xeon models: Intel HD P530
 
@@ -346,6 +346,7 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
           - `csr-active-config`
             - Keep it as `00000000` for full SIP (RECOMMENDED)
             - Keep it as `01000000` for unsigned kext allowing (partial SIP disabling, ONLY FOR TESTING KEXTS LOCALLY)
+            - Keep it as `03000000` to allow unsigned kexts and system files modification (ONLY FOR DEBUGGING PURPOSES, NOT RECOMMENDED)
 
       - PlatformInfo
 
@@ -359,13 +360,17 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
 
   - Setting up Input Devices
 
-    - Use **VoodooPS2Controller Rehabman Fork**
-      - The Acidanthera one is broken for us
+    - ~~Use **VoodooPS2Controller Rehabman Fork**~~
+      - ~~The Acidanthera one is broken for us~~
+    - Use any VoodooPS2Controller driver (keyboard input only, recommend acidanthera's as it's up to date) **however**:
+      - Disable in the config.plist `VoodooPS2Mouse` and `VoodooPS2Touchpad` so that they do not load
+    - [**VoodooRMI**](https://github.com/VoodooSMBus/VoodooRMI/releases) (with VoodooSMBus)
+      - This is the driver for the touchpad, credit to 1Revenger1 for making it happen
+      - You'll love this.
 
 - Follow the rest of the guide as usual but skip:
 
-  - Embedded Controller (EC)
-  - USB Pre-Setup
+  - SSDT-EC (we already have the proper naming)
 
 - When done, make sure you check everything again before starting.
 
@@ -457,6 +462,7 @@ After installing macOS, getting OpenCore to boot, it's time to get the rest of i
 | BrcmFirmwareData          | Holds all the configured firmwares for different Broadcom Bluetooth USB devices | BrcmBluetoothInjector                                  | https://github.com/acidanthera/BrcmPatchRAM          | https://github.com/acidanthera/BrcmPatchRAM/releases     |
 | BrcmPatchRAM3             | A macOS driver which applies PatchRAM updates for Broadcom RAMUSB based devices. (Note that BrcmPatchRAM3 is to be used with 10.15, it works with 10.14 but BrcmPatchRAM2 is recommended for that OS version, OpenCore can inject either of them depending on the OS version, make sure you configure it in the config.plist) | - BrcmBluetoothInjector<br />- BrcmFirmwareData        | https://github.com/acidanthera/BrcmPatchRAM          | https://github.com/acidanthera/BrcmPatchRAM/releases     |
 | NVMeFix                   | NVMeFix is a set of patches for the Apple NVMe storage driver, IONVMeFamily. Its goal is to improve compatibility with non-Apple SSDs. It may be used both on Apple and non-Apple computers. | Lilu                                                   | https://github.com/acidanthera/NVMeFix               | https://github.com/acidanthera/NVMeFix/releases          |
+| VoodooRMI                 | Synaptics RMI driver for macOS, touchpad. | VoodooSMBus *(comes with VoodooRMI zip as of writing)* | [VoodooRMI](https://github.com/VoodooSMBus/VoodooRMI/) | [VodoooRMI](https://github.com/VoodooSMBus/VoodooRMI/releases) |
 
 <sup>1</sup> : Only use this if you have a touchscreen and you want to use it with macOS. Not really the best way o interact with macOS as the driver will turn the touchscreen into a giant trackpad which is uncomfortable if you're going to invoke Launchpad or the like. Not really needed.
 
@@ -465,6 +471,12 @@ After installing macOS, getting OpenCore to boot, it's time to get the rest of i
 As of writing these things are happening:
 
 - VoodooI2C will be VoodooInput reliant, make sure you load VoodooInput before VoodooI2C, however from what I last tried, it doesn't work well
+- VoodooRMI comes with VoodooInput built in, when you add it to your config, make sure you use only one instance of VoodooInput, preferably the one that comes with VoodooRMI if you're not using it with anything else
+  - VoodooInput comes bundeled with:
+    - VoodooPS2
+    - VoodooI2C
+    - VoodooRMI (+SMBUS)
+  - Only use one of the instances and delete/disable the rest.
 - An intel Wifi driver is on the work, no promises though
 - *to be added if anything*
 
@@ -512,7 +524,7 @@ As of now there are a lot of WiFi cards that are compatible:
 | WiFi card                                    | Quirks and issues                                            |
 | -------------------------------------------- | ------------------------------------------------------------ |
 | Dell's DW1560<br />Lenovo's PN 04X6020       | Expensive AF now because they're not in production anymore.<br />Lenovo's part **NEEDS** dremeling, not really recommended if you don't know how to do that. |
-| Dell's DW1820A<br />Lenovo's 00JT494/00JT493 | Cheap now, works.<br />**Requires** adding `pci-aspm-default` = `0` (number) to its device path under DeviceProperties (for my case it's under `PciRoot(0x0)/Pci(0x1c,0x0)/Pci(0x0,0x0)`, you can check yours by using gfxutil from Acidanther's repo, however technically, it should be the same)<br />Has NaTiVe linux support which is 10/10<br />There is another taping solution from here: [tmx thread](https://www.tonymacx86.com/threads/thinkpad-p50-sierra-10-12-6.229084/post-2083809)<br />Bluetooth firmware fixed with the latest BrcmPatchRam from acidanthera. |
+| Dell's DW1820A<br />Lenovo's 00JT494/00JT493 | Cheap now, works.<br />~~**Requires** adding `pci-aspm-default` = `0` (number) to its device path under DeviceProperties (for my case it's under `PciRoot(0x0)/Pci(0x1c,0x0)/Pci(0x0,0x0)`, you can check yours by using gfxutil from Acidanther's repo, however technically, it should be the same)~~<br />Has NaTiVe linux support which is 10/10<br />There is another taping solution from here: [tmx thread](https://www.tonymacx86.com/threads/thinkpad-p50-sierra-10-12-6.229084/post-2083809)<br />Bluetooth firmware fixed with the latest BrcmPatchRam from acidanthera. <br /> **Update:** Use the taping solution, the aspm trick doesn't always work |
 | Apple's BCM94360CS2 or BCM943602CS           | CS2 is limited to 867Mbps on AC and up to 300Mbps on N (2.4Ghz), 2CS goes up to 1.3Gbps.<br />CS2 uses 2 antennae, 2CS needs 3 antennae! (You will have to use one of the WWAN antennae)<br />Technically any card that would fit there would work, CD variant can't because of the antenna connector (M.FL vs MHF4, we need the latter, you will have to use converters)<br />You will have to use a 12 + 6 to A/E adapter like shown in this [album](https://imgur.com/a/wRwnmDV). Since I don't use a WWAN, it made a snug fit there.<br />I got the card for $10, now the price has gone up. |
 | *all of the above*                           | You might want to `brcmfx-country=#a` to unlock some bands and get higher speeds. (You may also put your own country identifier) |
 
@@ -539,7 +551,7 @@ By default, if you get proper screen resolution after macOS install, the screen 
 ### Documentations and guides that you must read/follow in case you need assistance:
 
 - [OpenCore Configuration](https://github.com/acidanthera/OpenCorePkg/raw/master/Docs/Configuration.pdf)
-- [OpenCore Desktop Vanilla Guide](https://khronokernel.github.io/Opencore-Vanilla-Desktop-Guide/)
+- [Dortania](https://dortania.github.io/)
 - Rehabman's:
   - [ACPI patching guide](https://www.tonymacx86.com/threads/guide-patching-laptop-dsdt-ssdts.152573/)
   - [ACPI hot patching guide](https://www.tonymacx86.com/threads/guide-using-clover-to-hotpatch-acpi.200137/)
@@ -571,6 +583,7 @@ And with that, Good Luck and let me know if you succeeded. Also I would love to 
 - [fewtarius](https://github.com/fewtarius) for Clover Laptop Guide and help
 - [Resset](https://github.com/Ressetkk) for help with ACPI trash
 - [Mykola Grymalyuk aka khronokernel (boomer-chan)](https://github.com/khronokernel) for the OC guide and help (and being trash)
+- [1Revenger1](https://github.com/1Revenger1) for the guide and help and VoodooRMI and more
 - [osy86](https://github.com/osy86/) for TB3 debugging and tons of informative writing about thunderbolt
 - [Rehabman](https://github.com/RehabMan/) for the patches and guides and kexts
 - [ReddestDream](https://github.com/reddestdream) for tons of information
