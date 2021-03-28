@@ -288,80 +288,88 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
     - Note: you do not need to add the files manually in the config (the guide explains why). Just put the files where they should be and you can simply run OC Snapshot (or Clean Snapshot) to populate your config with proper paths for those files. This is covered in the guide in case you didn't follow through.
 
     - [Skylake Laptop OpenCore Guide](https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/skylake.html#starting-point)
-   	   - ACPI
-   	   		- Get SSDT-PNLF (for brightness)
-   	   		- DO NOT use SSDT-GPIO (we do not have I2C devices)
-   	   		- DO NOT use SSDT-EC-USBX, use SSDT-USBX from the repo, we have EC properly named
-   	   		- You may skip SSDT-PLUG, use SSDT-XCPM (same difference, but with some extra stuff for power management). You can still use SSDT-PLUG and then use [CPUFriendFriend](https://github.com/corpnewt/CPUFriendFriend) and make your own Power Management Profile.
+       - ACPI
+       	   		- Get SSDT-PNLF (for brightness)
+       	   		- DO NOT use SSDT-GPIO (we do not have I2C devices)
+       	   		- DO NOT use SSDT-EC-USBX, use SSDT-USBX from the repo, we have EC properly named
+       	   		- You may skip SSDT-PLUG, use SSDT-XCPM (same difference, but with some extra stuff for power management). You can still use SSDT-PLUG and then use [CPUFriendFriend](https://github.com/corpnewt/CPUFriendFriend) and make your own Power Management Profile.
       - Booter
           - Quirks -- in addition to the default setup
               - `DiscardHibernationMap` = True (may fix hibernation for some)
               - `ProvideCustomSlide` = False (There is no need to have it enabled, if you have boot issues, enable it)
       - DeviceProperties
-         - `PciRoot(0x0)/Pci(0x2,0x0)`
-         		- For 1080p Models
-  	            - For Xeon models: Intel HD P530
-  	              - `device-id` = `16190000`
-  	              - `AAPL,ig-platform-id` = `00001619`
-  	                 - You can try `26190000` and `00002619` combination too
-  	            - For i7 models: Intel HD 530
-  	              - No need for `device-id`
-  	              - Optional: `AAPL,ig-platform-id` = `00001B19`
-  	            - For **BOTH**: (our DVMT-prealloc is small, can't change it either)
-  	
-  	              | Key                        | Type   | Value      |
-  	              | :------------------------- | :----- | :--------- |
-  	              | `framebuffer-patch-enable` | Number | `1`        |
-  	              | `framebuffer-stolenmem`    | Data   | `00003001` |
-  	              | `framebuffer-fbmem`        | Data   | `00009000` |
-  	       - For 4K UHD Models (thanks to [u/TopuzWats](https://www.reddit.com/user/TopuzWats/)'s [post](https://www.reddit.com/r/hackintosh/comments/mec84o/thinkpad_p50_big_sur_opencore/))
-  	       	  - For Xeon models: Intel HD P530 (not tested, need feedback, open an issue)
-  	              - `device-id` = `16190000`
-  	              - `AAPL,ig-platform-id` = `00001619`
-  	                 - You can try `26190000` and `00002619` combination too
-  	            - For i7 models: Intel HD 530
-  	              - No need for `device-id`
-  	              - Optional: `AAPL,ig-platform-id` = `00001B19`
-  	            - For **BOTH**: (your DVMT is large enough)
-  	
-  	              | Key                        | Type   | Value      |
-  	              | :------------------------- | :----- | :--------- |
-  	              | `framebuffer-patch-enable` | Number | `1`        |
-  	              | `enable-max-pixel-clock-override`    | Number   | `1` |
-  	              | `enable-hdmi20`        | Number   | `1` |
-  	              
-  	                  - Note: `enable-hdmi20` does not work on BigSur due to the broken Userspace patching, using `enable-max-pixel-clock-override` fixes 4K issues on BigSur (according to the reddit post)
+        - `PciRoot(0x0)/Pci(0x2,0x0)`
+
+          - **For 1080p Models**
+
+            - For Xeon models: Intel HD P530
+
+              - `device-id` = `16190000``
+              - `AAPL,ig-platform-id` = `00001619`
+                - You can try `26190000` and `00002619` combination too
+
+               - For i7 models: Intel HD 530
+                   - No need for `device-id`
+                   - Optional: `AAPL,ig-platform-id` = `00001B19`
+
+            - For **BOTH**: (our DVMT-prealloc is small, can't change it either)
+
+              | Key                        | Type   | Value      |
+              | :------------------------- | :----- | :--------- |
+              | `framebuffer-patch-enable` | Number | `1`        |
+              | `framebuffer-stolenmem`    | Data   | `00003001` |
+              | `framebuffer-fbmem`        | Data   | `00009000` |
+
+          - **For 4K UHD Models** (thanks to [u/TopuzWats](https://www.reddit.com/user/TopuzWats/)'s [post](https://www.reddit.com/r/hackintosh/comments/mec84o/thinkpad_p50_big_sur_opencore/))
+          	
+              - For Xeon models: Intel HD P530 (not tested, need feedback, open an issue)
+                 - `device-id` = `16190000`
+                 - `AAPL,ig-platform-id` = `00001619`
+                    - You can try `26190000` and `00002619` combination too
+               - For i7 models: Intel HD 530
+                 - No need for `device-id`
+                 - Optional: `AAPL,ig-platform-id` = `00001B19`
+           - For **BOTH**: (your DVMT is large enough)
+             
+              | Key                        | Type   | Value      |
+              | :------------------------- | :----- | :--------- |
+              | `framebuffer-patch-enable` | Number | `1`        |
+              | `enable-max-pixel-clock-override`    | Number   | `1` |
+              | `enable-hdmi20`        | Number   | `1` |
+              
+                 - Note: `enable-hdmi20` does not work on BigSur due to the broken Userspace patching, using `enable-max-pixel-clock-override` fixes 4K issues on BigSur (according to the reddit post)
 
         - `PciRoot(0x0)/Pci(0x1f,0x3)`
-      
+
     - `layout-id` = `29` (Number)
-    
+
   - Kernel
     
-        - Quirks (in addition to the guide's selection)
-          - `XhciPortLimit` = `NO` 
-            - There is no need for this
-          - `AppleCpuPmCfgLock` = `NO`
-            - There is no need for this
+    - Quirks (in addition to the guide's selection)
+      - `XhciPortLimit` = `NO` 
+        - There is no need for this
+      - `AppleCpuPmCfgLock` = `NO`
+        - There is no need for this
+    
     - Kexts, check the above gathered kexts
     
   - NVRAM
     
-        - `4D1EDE05-38C7-4A6A-9CC6-4BCCA8B38C14` (Booter Path)
-          - For those with 4K UHD display:
-            - `UIScale` = `02`
-        - `7C436110-AB2A-4BBB-A880-FE41995C9F82`
-          - `boot-args`
-            - `-v debug=0x100 keepsyms=1` 
-              - Use this for this install section, you can remove `-v debug=0x100` once we're done.
-          - Remove/Keep empty:
-             - `nvda_drv`
-             - `prev-lang:kbd`
-                 - You might change it to `String` with `en-US:0` value, check the guide for other languages
-          - `csr-active-config`
-             - Keep it as `00000000` for full SIP (RECOMMENDED)
-             - Keep it as `01000000` for unsigned kext allowing (partial SIP disabling, ONLY FOR TESTING KEXTS LOCALLY)
-         - Keep it as `03000000` to allow unsigned kexts and system files modification (ONLY FOR DEBUGGING PURPOSES, NOT RECOMMENDED)
+    - `4D1EDE05-38C7-4A6A-9CC6-4BCCA8B38C14` (Booter Path)
+      - For those with 4K UHD display:
+        - `UIScale` = `02`
+    - `7C436110-AB2A-4BBB-A880-FE41995C9F82`
+      - `boot-args`
+        - `-v debug=0x100 keepsyms=1` 
+          - Use this for this install section, you can remove `-v debug=0x100` once we're done.
+      - Remove/Keep empty:
+         - `nvda_drv`
+         - `prev-lang:kbd`
+             - You might change it to `String` with `en-US:0` value, check the guide for other languages
+      - `csr-active-config`
+         - Keep it as `00000000` for full SIP (RECOMMENDED)
+         - Keep it as `01000000` for unsigned kext allowing (partial SIP disabling, ONLY FOR TESTING KEXTS LOCALLY)
+     - Keep it as `03000000` to allow unsigned kexts and system files modification (ONLY FOR DEBUGGING PURPOSES, NOT RECOMMENDED)
     
   - PlatformInfo
     
@@ -369,9 +377,9 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
      
   - UEFI
     
-         - Protocols
-            - AppleSmcIo
-              - Enable this if you're using FileVault2
+     - Protocols
+        - AppleSmcIo
+          - Enable this if you're using FileVault2
 
 - When done, make sure you check everything again before starting.
 
@@ -489,6 +497,8 @@ You should be all done for now. All of these patches will be in `oc-additions.pl
 
 <sup>3</sup> : **DO NOT** install both, use only one of them.
 
+Also without me telling you, you will not need to add the broadcom kexts if you're using intel.
+
 ---
 
 ## Issues and small fixes and whatever I can't put in a category lol
@@ -501,10 +511,10 @@ No (not now)
 
 | Port      | Address               | Physical Location                    | Internal/External | Enabled/Disabled in USBMap |
 | --------- | --------------------- | ------------------------------------ | ----------------- | -------------------------- |
-| HSP0/SSP0 | `00000001`|`00000011` | Back Port - Power Share              | E                 | E/E                        |
-| HSP1/SSP1 | `00000002`|`00000012` | Back Port - next to Ethernet Port    | E                 | E/E                        |
-| HSP4/SSP4 | `00000005`|`00000015` | Right Port - next to mDP             | E                 | E/E                        |
-| HSP5/SSP5 | `00000006`|`00000016` | Right Port - next to 3.5mm jack port | E                 | E/E                        |
+| HSP0/SSP0 | `00000001`\|`00000011` | Back Port - Power Share              | E                 | E/E                        |
+| HSP1/SSP1 | `00000002`\|`00000012` | Back Port - next to Ethernet Port    | E                 | E/E                        |
+| HSP4/SSP4 | `00000005`\|`00000015` | Right Port - next to mDP             | E                 | E/E                        |
+| HSP5/SSP5 | `00000006`\|`00000016` | Right Port - next to 3.5mm jack port | E                 | E/E                        |
 | HSP7      | `00000008`            | Integrated Camera module             | I                 | E                          |
 | HSP8      | `00000009`            | Fingerprint Sensor                   | I                 | D                          |
 | HSP9      | `0000000A`            | Wacom Touchscreen + Pen              | I                 | E                          |
@@ -518,8 +528,8 @@ You will need to disassemble your laptop:
 1. Remove the battery and power
 2. Remove the back cover
    * The screws stay retained in the cover
-3. You will find 3 screw holes for the keyboard, THEY ARE LONG
-4. Open back the laptop screen and slide the keyboard towards the screen (DO NOT LIFT)
+3. You will find 3 screw holes for the keyboard, THEY ARE LONG and they are labeled with a keyboard icon.
+4. Open back the laptop screen and slide the keyboard towards the screen (DO NOT LIFT, just push it)
 5. The keyboard will loosen up on bottom, you can lift it **GENTLY** from the bottom (aka the tracepoint buttons area)
 6. Disconnect the TrackPoint and Keyboard ribbons (BE CAREFUL! THEY VERY FRAGILE)
 7. You have now access to the extra 2 RAM slots and WWAN and WLAN slots.
@@ -601,6 +611,7 @@ And with that, Good Luck and let me know if you succeeded. Also I would love to 
 - [DhinakG](https://github.com/dhinakg) for various help
 - [fewtarius](https://github.com/fewtarius) for Clover Laptop Guide and help
 - [Resset](https://github.com/Ressetkk) for help with ACPI trash
+- [u/TopuzWats](https://www.reddit.com/user/TopuzWats/)'s [post](https://www.reddit.com/r/hackintosh/comments/mec84o/thinkpad_p50_big_sur_opencore/)
 - [Mykola Grymalyuk aka khronokernel (boomer-chan)](https://github.com/khronokernel) for the OC guide and help (and being trash)
 - [1Revenger1](https://github.com/1Revenger1) for the guide and help and VoodooRMI and more
 - [osy86](https://github.com/osy86/) for TB3 debugging and tons of informative writing about thunderbolt
