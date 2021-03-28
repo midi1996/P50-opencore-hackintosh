@@ -304,7 +304,7 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
 
             - For Xeon models: Intel HD P530
 
-              - `device-id` = `16190000``
+              - `device-id` = `16190000`
               - `AAPL,ig-platform-id` = `00001619`
                 - You can try `26190000` and `00002619` combination too
 
@@ -326,22 +326,21 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
                  - `device-id` = `16190000`
                  - `AAPL,ig-platform-id` = `00001619`
                     - You can try `26190000` and `00002619` combination too
-               - For i7 models: Intel HD 530
+              - For i7 models: Intel HD 530
                  - No need for `device-id`
                  - Optional: `AAPL,ig-platform-id` = `00001B19`
-           - For **BOTH**: (your DVMT is large enough)
-             
-              | Key                        | Type   | Value      |
-              | :------------------------- | :----- | :--------- |
-              | `framebuffer-patch-enable` | Number | `1`        |
-              | `enable-max-pixel-clock-override`    | Number   | `1` |
-              | `enable-hdmi20`        | Number   | `1` |
+              - For **BOTH**: (your DVMT is large enough)
+
+                 | Key                        | Type   | Value      |
+                 | :------------------------- | :----- | :--------- |
+                 | `framebuffer-patch-enable` | Number | `1`        |
+                 | `enable-max-pixel-clock-override`    | Number   | `1` |
+                 | `enable-hdmi20`        | Number   | `1` |
               
                  - Note: `enable-hdmi20` does not work on BigSur due to the broken Userspace patching, using `enable-max-pixel-clock-override` fixes 4K issues on BigSur (according to the reddit post)
 
         - `PciRoot(0x0)/Pci(0x1f,0x3)`
-
-    - `layout-id` = `29` (Number)
+            - `layout-id` = `29` (Number)
 
   - Kernel
     
@@ -369,7 +368,7 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
       - `csr-active-config`
          - Keep it as `00000000` for full SIP (RECOMMENDED)
          - Keep it as `01000000` for unsigned kext allowing (partial SIP disabling, ONLY FOR TESTING KEXTS LOCALLY)
-     - Keep it as `03000000` to allow unsigned kexts and system files modification (ONLY FOR DEBUGGING PURPOSES, NOT RECOMMENDED)
+         - Keep it as `03000000` to allow unsigned kexts and system files modification (ONLY FOR DEBUGGING PURPOSES, NOT RECOMMENDED)
     
   - PlatformInfo
     
@@ -406,7 +405,7 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
       2. While in Finder, click on Finder > Preferences > General > Show these items on the desktop > Hard disks and External disks
       3. You will see your SSD's partitions on the desktop, right click on the macOS partition > Quick Actions > Mount EFI > type in your password when you get the prompt. Your SSD's EFI will show up.
       4. Copy `Your USB's FAT32 partition` > `EFI` > `BOOT` and `OC` to `Your SSD's EFI` > `EFI` > `.`
-      5. In your USB, backup `EFI` > `BOOT` > `BOOTx64.EFI` and replace it with `OpenShell.efi` that you renamed to `BOOTX64.EFI`, this way, your laptop will boot to the shell instead of OC
+      5. In your USB, backup `EFI` > `BOOT` > `BOOTx64.EFI` and replace it with `OpenShell.efi` that you will rename to `BOOTX64.EFI`, this way, your laptop will boot to the shell instead of OC
       6. Boot the USB from your firmware Boot Options
       7. Once you're greeted with the shell
          1. Type `map -b`, usually you'll find the first partition listed is the FAT32 readable partition, should be named `FSX:` where X is a number
