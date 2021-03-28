@@ -1,31 +1,31 @@
 /*
  * Intel ACPI Component Architecture
- * AML/ASL+ Disassembler version 20180427 (64-bit version)(RM)
- * Copyright (c) 2000 - 2018 Intel Corporation
+ * AML/ASL+ Disassembler version 20201113 (64-bit version)
+ * Copyright (c) 2000 - 2020 Intel Corporation
  * 
  * Disassembling to symbolic ASL+ operators
  *
- * Disassembly of SSDT-PNLF.aml, Sun Mar 29 02:00:18 2020
+ * Disassembly of /Users/midi/Gits/P50-opencore-hackintosh/Files/ACPI_compiled/SSDT-PNLF.aml, Sun Mar 28 11:49:12 2021
  *
  * Original Table Header:
  *     Signature        "SSDT"
- *     Length           0x00000468 (1128)
+ *     Length           0x0000047E (1150)
  *     Revision         0x02
- *     Checksum         0xA6
+ *     Checksum         0xF0
  *     OEM ID           "hack"
  *     OEM Table ID     "_PNLF"
  *     OEM Revision     0x00000000 (0)
  *     Compiler ID      "INTL"
- *     Compiler Version 0x20190215 (538509845)
+ *     Compiler Version 0x20200214 (538968596)
  */
 DefinitionBlock ("", "SSDT", 2, "hack", "_PNLF", 0x00000000)
 {
-    External (_SB_.PCI0.GFX0, DeviceObj)    // (from opcode)
-    External (RMCF.BKLT, IntObj)    // (from opcode)
-    External (RMCF.FBTP, IntObj)    // (from opcode)
-    External (RMCF.GRAN, IntObj)    // (from opcode)
-    External (RMCF.LEVW, IntObj)    // (from opcode)
-    External (RMCF.LMAX, IntObj)    // (from opcode)
+    External (_SB_.PCI0.GFX0, DeviceObj)
+    External (RMCF.BKLT, IntObj)
+    External (RMCF.FBTP, IntObj)
+    External (RMCF.GRAN, IntObj)
+    External (RMCF.LEVW, IntObj)
+    External (RMCF.LMAX, IntObj)
 
     Scope (_SB.PCI0.GFX0)
     {
@@ -37,8 +37,19 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_PNLF", 0x00000000)
         Name (_ADR, Zero)  // _ADR: Address
         Name (_HID, EisaId ("APP0002"))  // _HID: Hardware ID
         Name (_CID, "backlight")  // _CID: Compatible ID
-        Name (_UID, Zero)  // _UID: Unique ID
-        Name (_STA, 0x0B)  // _STA: Status
+        Name (_UID, 0x10)  // _UID: Unique ID
+        Method (_STA, 0, NotSerialized)  // _STA: Status
+        {
+            If (_OSI ("Darwin"))
+            {
+                Return (0x0B)
+            }
+            Else
+            {
+                Return (Zero)
+            }
+        }
+
         Field (^RMP3, AnyAcc, NoLock, Preserve)
         {
             Offset (0x02), 
@@ -74,7 +85,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_PNLF", 0x00000000)
                 {
                     If ((Ones != \RMCF.LEVW))
                     {
-                        Local5 = \RMCF.LEVW
+                        Local5 = \RMCF.LEVW /* External reference */
                     }
                 }
 
@@ -85,7 +96,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_PNLF", 0x00000000)
             {
                 If (CondRefOf (\RMCF.GRAN))
                 {
-                    ^GRAN = \RMCF.GRAN
+                    ^GRAN = \RMCF.GRAN /* External reference */
                 }
                 Else
                 {
@@ -99,7 +110,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_PNLF", 0x00000000)
             Local4 = One
             If (CondRefOf (\RMCF.BKLT))
             {
-                Local4 = \RMCF.BKLT
+                Local4 = \RMCF.BKLT /* External reference */
             }
 
             If (!(One & Local4))
@@ -107,17 +118,17 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_PNLF", 0x00000000)
                 Return (Zero)
             }
 
-            Local0 = ^GDID
+            Local0 = ^GDID /* \_SB_.PCI0.GFX0.PNLF.GDID */
             Local2 = Ones
             If (CondRefOf (\RMCF.LMAX))
             {
-                Local2 = \RMCF.LMAX
+                Local2 = \RMCF.LMAX /* External reference */
             }
 
             Local3 = Zero
             If (CondRefOf (\RMCF.FBTP))
             {
-                Local3 = \RMCF.FBTP
+                Local3 = \RMCF.FBTP /* External reference */
             }
 
             If (((One == Local3) || (Ones != Match (Package (0x10)
@@ -181,7 +192,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_PNLF", 0x00000000)
                 }
 
                 INI1 (Local4)
-                Local1 = ^LEVX
+                Local1 = ^LEVX /* \_SB_.PCI0.GFX0.PNLF.LEVX */
                 If (!Local1)
                 {
                     Local1 = Local2
@@ -249,7 +260,8 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_PNLF", 0x00000000)
 
                 If ((!(0x08 & Local4) && (Local2 != Local1)))
                 {
-                    Local0 = ((((^LEVX & 0xFFFF) * Local2) / Local1) | (Local2 << 0x10))
+                    Local0 = ((((^LEVX & 0xFFFF) * Local2) / Local1) | 
+                        (Local2 << 0x10))
                     ^LEVX = Local0
                 }
             }

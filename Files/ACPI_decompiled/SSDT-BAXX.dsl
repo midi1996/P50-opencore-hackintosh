@@ -1,102 +1,128 @@
 /*
  * Intel ACPI Component Architecture
- * AML/ASL+ Disassembler version 20180427 (64-bit version)(RM)
- * Copyright (c) 2000 - 2018 Intel Corporation
+ * AML/ASL+ Disassembler version 20201113 (64-bit version)
+ * Copyright (c) 2000 - 2020 Intel Corporation
  * 
  * Disassembling to symbolic ASL+ operators
  *
- * Disassembly of SSDT-BAXX.aml, Sun Mar 29 02:00:18 2020
+ * Disassembly of /Users/midi/Gits/P50-opencore-hackintosh/Files/ACPI_compiled/SSDT-BAXX.aml, Sun Mar 28 11:49:12 2021
  *
  * Original Table Header:
  *     Signature        "SSDT"
- *     Length           0x00000B72 (2930)
+ *     Length           0x00000BD0 (3024)
  *     Revision         0x02
- *     Checksum         0xD3
+ *     Checksum         0x20
  *     OEM ID           "hack"
  *     OEM Table ID     "batt"
  *     OEM Revision     0x00000000 (0)
  *     Compiler ID      "INTL"
- *     Compiler Version 0x20200110 (538968336)
+ *     Compiler Version 0x20200214 (538968596)
  */
 DefinitionBlock ("", "SSDT", 2, "hack", "batt", 0x00000000)
 {
-    External (_SB_.LID_, DeviceObj)    // (from opcode)
-    External (_SB_.PCI0.D0VI, UnknownObj)    // (from opcode)
-    External (_SB_.PCI0.EXP1, DeviceObj)    // (from opcode)
-    External (_SB_.PCI0.EXP1.PDSF, FieldUnitObj)    // (from opcode)
-    External (_SB_.PCI0.EXP1.PDSX, FieldUnitObj)    // (from opcode)
-    External (_SB_.PCI0.EXP5, DeviceObj)    // (from opcode)
-    External (_SB_.PCI0.EXP5.PDSF, FieldUnitObj)    // (from opcode)
-    External (_SB_.PCI0.EXP5.PDSX, FieldUnitObj)    // (from opcode)
-    External (_SB_.PCI0.EXP5.VDID, FieldUnitObj)    // (from opcode)
-    External (_SB_.PCI0.GFX0.CLID, UnknownObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_, DeviceObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__, DeviceObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.AC__, DeviceObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.AC__._PSR, MethodObj)    // 0 Arguments (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.B0I0, IntObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.B0I1, IntObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.B0I2, IntObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.B0I3, IntObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.B1I0, IntObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.B1I1, IntObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.B1I2, IntObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.B1I3, IntObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.BATM, MutexObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.BSWA, IntObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.BSWR, IntObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.HCMU, FieldUnitObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.HFNI, FieldUnitObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.HFSP, FieldUnitObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.HIID, FieldUnitObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.HKEY, DeviceObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.HKEY.ANDN, IntObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.HKEY.ANGN, IntObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.HKEY.DHKC, IntObj)    // (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.HKEY.MHKQ, MethodObj)    // 1 Arguments (from opcode)
-    External (_SB_.PCI0.LPC_.EC__.HSPA, FieldUnitObj)    // (from opcode)
-    External (_SB_.PCI0.MLTR, UnknownObj)    // (from opcode)
-    External (_SB_.PCI0.ONOF, UnknownObj)    // (from opcode)
-    External (_SB_.PCI0.PEG0.PEGP.HDEF, IntObj)    // (from opcode)
-    External (_SB_.SLPB, DeviceObj)    // (from opcode)
-    External (_SI_._SST, MethodObj)    // 1 Arguments (from opcode)
-    External (_TZ_.THM0, ThermalZoneObj)    // (from opcode)
-    External (ACST, IntObj)    // (from opcode)
-    External (B0I0, IntObj)    // (from opcode)
-    External (B0I1, IntObj)    // (from opcode)
-    External (B0I2, IntObj)    // (from opcode)
-    External (B0I3, IntObj)    // (from opcode)
-    External (B1I0, IntObj)    // (from opcode)
-    External (B1I1, IntObj)    // (from opcode)
-    External (B1I2, IntObj)    // (from opcode)
-    External (B1I3, IntObj)    // (from opcode)
-    External (BRLV, FieldUnitObj)    // (from opcode)
-    External (CHKC, FieldUnitObj)    // (from opcode)
-    External (CHKE, FieldUnitObj)    // (from opcode)
-    External (CMPR, FieldUnitObj)    // (from opcode)
-    External (FNID, IntObj)    // (from opcode)
-    External (IOEN, FieldUnitObj)    // (from opcode)
-    External (IOST, FieldUnitObj)    // (from opcode)
-    External (ISWK, FieldUnitObj)    // (from opcode)
-    External (LIDB, FieldUnitObj)    // (from opcode)
-    External (NBCF, IntObj)    // (from opcode)
-    External (OSC4, FieldUnitObj)    // (from opcode)
-    External (OSUM, MutexObj)    // (from opcode)
-    External (PWRS, FieldUnitObj)    // (from opcode)
-    External (RRBF, IntObj)    // (from opcode)
-    External (SCRM, FieldUnitObj)    // (from opcode)
-    External (SPS_, IntObj)    // (from opcode)
-    External (TBTS, FieldUnitObj)    // (from opcode)
-    External (VIGD, FieldUnitObj)    // (from opcode)
-    External (WAKI, IntObj)    // (from opcode)
-    External (WFEV, EventObj)    // (from opcode)
-    External (WVIS, IntObj)    // (from opcode)
-    External (XXAK, MethodObj)    // 1 Arguments (from opcode)
+    External (_SB_.LID_, DeviceObj)
+    External (_SB_.PCI0.D0VI, UnknownObj)
+    External (_SB_.PCI0.EXP1, DeviceObj)
+    External (_SB_.PCI0.EXP1.PDSF, FieldUnitObj)
+    External (_SB_.PCI0.EXP1.PDSX, FieldUnitObj)
+    External (_SB_.PCI0.EXP5, DeviceObj)
+    External (_SB_.PCI0.EXP5.PDSF, FieldUnitObj)
+    External (_SB_.PCI0.EXP5.PDSX, FieldUnitObj)
+    External (_SB_.PCI0.EXP5.VDID, FieldUnitObj)
+    External (_SB_.PCI0.GFX0.CLID, UnknownObj)
+    External (_SB_.PCI0.LPC_, DeviceObj)
+    External (_SB_.PCI0.LPC_.EC__, DeviceObj)
+    External (_SB_.PCI0.LPC_.EC__.AC__, DeviceObj)
+    External (_SB_.PCI0.LPC_.EC__.AC__._PSR, MethodObj)    // 0 Arguments
+    External (_SB_.PCI0.LPC_.EC__.B0I0, IntObj)
+    External (_SB_.PCI0.LPC_.EC__.B0I1, IntObj)
+    External (_SB_.PCI0.LPC_.EC__.B0I2, IntObj)
+    External (_SB_.PCI0.LPC_.EC__.B0I3, IntObj)
+    External (_SB_.PCI0.LPC_.EC__.B1I0, IntObj)
+    External (_SB_.PCI0.LPC_.EC__.B1I1, IntObj)
+    External (_SB_.PCI0.LPC_.EC__.B1I2, IntObj)
+    External (_SB_.PCI0.LPC_.EC__.B1I3, IntObj)
+    External (_SB_.PCI0.LPC_.EC__.BATM, MutexObj)
+    External (_SB_.PCI0.LPC_.EC__.BSWA, IntObj)
+    External (_SB_.PCI0.LPC_.EC__.BSWR, IntObj)
+    External (_SB_.PCI0.LPC_.EC__.HCMU, FieldUnitObj)
+    External (_SB_.PCI0.LPC_.EC__.HFNI, FieldUnitObj)
+    External (_SB_.PCI0.LPC_.EC__.HFSP, FieldUnitObj)
+    External (_SB_.PCI0.LPC_.EC__.HIID, FieldUnitObj)
+    External (_SB_.PCI0.LPC_.EC__.HKEY, DeviceObj)
+    External (_SB_.PCI0.LPC_.EC__.HKEY.ANDN, IntObj)
+    External (_SB_.PCI0.LPC_.EC__.HKEY.ANGN, IntObj)
+    External (_SB_.PCI0.LPC_.EC__.HKEY.DHKC, IntObj)
+    External (_SB_.PCI0.LPC_.EC__.HKEY.MHKQ, MethodObj)    // 1 Arguments
+    External (_SB_.PCI0.LPC_.EC__.HSPA, FieldUnitObj)
+    External (_SB_.PCI0.MLTR, UnknownObj)
+    External (_SB_.PCI0.ONOF, UnknownObj)
+    External (_SB_.PCI0.PEG0.PEGP.HDEF, IntObj)
+    External (_SB_.SLPB, DeviceObj)
+    External (_SI_._SST, MethodObj)    // 1 Arguments
+    External (_TZ_.THM0, ThermalZoneObj)
+    External (ACST, IntObj)
+    External (B0I0, IntObj)
+    External (B0I1, IntObj)
+    External (B0I2, IntObj)
+    External (B0I3, IntObj)
+    External (B1I0, IntObj)
+    External (B1I1, IntObj)
+    External (B1I2, IntObj)
+    External (B1I3, IntObj)
+    External (BRLV, FieldUnitObj)
+    External (CHKC, FieldUnitObj)
+    External (CHKE, FieldUnitObj)
+    External (CMPR, FieldUnitObj)
+    External (FNID, IntObj)
+    External (IOEN, FieldUnitObj)
+    External (IOST, FieldUnitObj)
+    External (ISWK, FieldUnitObj)
+    External (LIDB, FieldUnitObj)
+    External (NBCF, IntObj)
+    External (OSC4, FieldUnitObj)
+    External (OSUM, MutexObj)
+    External (PWRS, FieldUnitObj)
+    External (RRBF, IntObj)
+    External (SCRM, FieldUnitObj)
+    External (SPS_, IntObj)
+    External (TBTS, FieldUnitObj)
+    External (VIGD, FieldUnitObj)
+    External (WAKI, IntObj)
+    External (WFEV, EventObj)
+    External (WVIS, IntObj)
+    External (XXAK, MethodObj)    // 1 Arguments
 
     Scope (_SB.PCI0.LPC)
     {
         Scope (EC)
         {
+            Method (WE1B, 2, NotSerialized)
+            {
+                OperationRegion (ERAM, EmbeddedControl, Arg0, One)
+                Field (ERAM, ByteAcc, NoLock, Preserve)
+                {
+                    BYTE,   8
+                }
+
+                BYTE = Arg1
+            }
+
+            Method (WECB, 3, Serialized)
+            {
+                Arg1 = ((Arg1 + 0x07) >> 0x03)
+                Name (TEMP, Buffer (Arg1){})
+                TEMP = Arg2
+                Arg1 += Arg0
+                Local0 = Zero
+                While ((Arg0 < Arg1))
+                {
+                    WE1B (Arg0, DerefOf (TEMP [Local0]))
+                    Arg0++
+                    Local0++
+                }
+            }
+
             OperationRegion (REEE, EmbeddedControl, Zero, 0x0100)
             Field (REEE, ByteAcc, NoLock, Preserve)
             {
@@ -208,16 +234,16 @@ DefinitionBlock ("", "SSDT", 2, "hack", "batt", 0x00000000)
                         Local2--
                     }
 
-                    Arg1 [0x0A] = SERN
+                    Arg1 [0x0A] = SERN /* \_SB_.PCI0.LPC_.EC__.GBIF.SERN */
                     HIID = (Arg0 | 0x06)
                     Arg1 [0x09] = RECB (0xA0, 0x80)
                     HIID = (Arg0 | 0x04)
                     Name (BTYP, Buffer (0x05)
                     {
-                         0x00, 0x00, 0x00, 0x00, 0x00                   
+                         0x00, 0x00, 0x00, 0x00, 0x00                     // .....
                     })
                     BTYP = B1B4 (CH00, CH01, CH02, CH03)
-                    Arg1 [0x0B] = BTYP
+                    Arg1 [0x0B] = BTYP /* \_SB_.PCI0.LPC_.EC__.GBIF.BTYP */
                     HIID = (Arg0 | 0x05)
                     Arg1 [0x0C] = RECB (0xA0, 0x80)
                 }
@@ -300,7 +326,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "batt", 0x00000000)
                 }
 
                 Local5 = (One << (Arg0 >> 0x04))
-                BSWA |= BSWR
+                BSWA |= BSWR /* External reference */
                 If (((\_SB.PCI0.LPC.EC.BSWA & Local5) == Zero))
                 {
                     Arg3 [Zero] = Local0
@@ -328,17 +354,17 @@ DefinitionBlock ("", "SSDT", 2, "hack", "batt", 0x00000000)
                     {
                         If ((Arg0 == Zero))
                         {
-                            Arg3 [Zero] = B0I0
-                            Arg3 [One] = B0I1
-                            Arg3 [0x02] = B0I2
-                            Arg3 [0x03] = B0I3
+                            Arg3 [Zero] = B0I0 /* External reference */
+                            Arg3 [One] = B0I1 /* External reference */
+                            Arg3 [0x02] = B0I2 /* External reference */
+                            Arg3 [0x03] = B0I3 /* External reference */
                         }
                         Else
                         {
-                            Arg3 [Zero] = B1I0
-                            Arg3 [One] = B1I1
-                            Arg3 [0x02] = B1I2
-                            Arg3 [0x03] = B1I3
+                            Arg3 [Zero] = B1I0 /* External reference */
+                            Arg3 [One] = B1I1 /* External reference */
+                            Arg3 [0x02] = B1I2 /* External reference */
+                            Arg3 [0x03] = B1I3 /* External reference */
                         }
                     }
                     Else
@@ -349,7 +375,8 @@ DefinitionBlock ("", "SSDT", 2, "hack", "batt", 0x00000000)
                         Arg3 [0x03] = Local3
                     }
 
-                    If ((((Local0 & 0x04) == Zero) && ((Local2 > Zero) && (Local3 > Zero))))
+                    If ((((Local0 & 0x04) == Zero) && ((Local2 > Zero) && 
+                        (Local3 > Zero))))
                     {
                         BSWA &= ~Local5
                         Arg3 [Zero] = Local0
@@ -371,7 +398,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "batt", 0x00000000)
                     BYTE,   8
                 }
 
-                Return (BYTE)
+                Return (BYTE) /* \_SB_.PCI0.LPC_.EC__.RE1B.BYTE */
             }
 
             Method (RECB, 2, Serialized)
@@ -387,14 +414,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "batt", 0x00000000)
                     Local0++
                 }
 
-                Return (TEMP)
+                Return (TEMP) /* \_SB_.PCI0.LPC_.EC__.RECB.TEMP */
             }
         }
     }
 
     Scope (\_GPE)
     {
-        Method (_L17, 0, NotSerialized)  // _Lxx: Level-Triggered GPE
+        Method (_L17, 0, NotSerialized)  // _Lxx: Level-Triggered GPE, xx=0x00-0xFF
         {
             Local0 = B1B2 (\_SB.PCI0.LPC.EC.AC10, \_SB.PCI0.LPC.EC.AC11)
             \RRBF = Local0
@@ -402,23 +429,23 @@ DefinitionBlock ("", "SSDT", 2, "hack", "batt", 0x00000000)
             If ((Local0 & 0x02)){}
             If ((Local0 & 0x04))
             {
-                Notify (\_SB.LID, 0x02)
+                Notify (\_SB.LID, 0x02) // Device Wake
             }
 
             If ((Local0 & 0x08))
             {
-                Notify (\_SB.SLPB, 0x02)
+                Notify (\_SB.SLPB, 0x02) // Device Wake
             }
 
             If ((Local0 & 0x10))
             {
-                Notify (\_SB.SLPB, 0x02)
+                Notify (\_SB.SLPB, 0x02) // Device Wake
             }
 
             If ((Local0 & 0x40)){}
             If ((Local0 & 0x80))
             {
-                Notify (\_SB.SLPB, 0x02)
+                Notify (\_SB.SLPB, 0x02) // Device Wake
             }
         }
     }

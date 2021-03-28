@@ -23,9 +23,11 @@ THIS GUIDE IS PROVIDED TO YOU FOR EDUCATIONAL PURPOSES. I AND ANYONE MENTIONED D
 * RAM: 16GB+16GB 2133Mhz DDR4 (2 Slots filled from 4)
 * Storage:
   * 512GB Samsung SSD 950 Pro NVMe M.2
-  * 1TB WD Blue HDD
-  * 1 empty slot that I might fill with a 1TB M.2 SSD in the future (~~when I have some money~~)
-* WiFi Card: *was* Intel Wireless Dual Band 8360 (for vPro), replaced with **Apple BCM94360CS2**.
+    * macOS + Linux
+  * 1TB Samsung SSD 970 Evo NVMe M.2
+  	 * Windows 
+  * 1TB Sandisk SSD3D or whatever (good stuff) AHCI SATA
+* WiFi Card: *was* Intel Wireless Dual Band 8360 (for vPro), replaced with ~~**Apple BCM94360CS2**~~ DW1820A.
   * See the WiFi card options later in this guide
 * Display: 1920 by 1080 (will check OEM later)
 * Touch Panel: WACOM AES Digitizer (Touch + Pen)
@@ -42,12 +44,13 @@ A lot of things are working fine as expected:
 
 - CPU/GPU Power Management
   - <1W on idle
+  	 - depends on running apps
 - GPU Acceleration
   - QE/CI Support
-  - HEVC encoding
+  - HEVC decoding
 - USB Type A ports
   - USB Power output up to 10W for iDevices
-  - USB Charging port works in sleep in 10W
+  - USB Charging port works in sleep at 10W
 - WiFi/Bluetooth
   - AirDrop, Continuity, Handoff...
     - Requires proper WiFi card
@@ -67,8 +70,8 @@ A lot of things are working fine as expected:
   - Hotkeys
 - Trackpoint
 - Trackpad
-  - Only 2 finger scrolls and 3 fingers swipes that are configurable in the kext or keyboard settings
-- Sleep/Wake/Shutdown/Reboot
+  - Full gestures (mac-like)
+- Sleep/Wake/Shutdown/Reboot/**Hibernation**
 - Startup Disk/Bootcamp reboot
   - From and to Windows/macOS
   - Follow OpenCore's documentation for that
@@ -78,18 +81,20 @@ A lot of things are working fine as expected:
 - Apple Services (AppStore, iMessage, FaceTime, iCloud...)
   - Given that you use properly generated SNs
 - Battery reading
+- Fan reading and control
+- Hotkeys
 
 ## What's not working
 
 - Fingerprint Reader (disabled with USBMap)
 - ExpressCard (disabled in UEFI Setup)
-- SDCard reader (the available driver causes crashes and isnt stable enough)
+- SDCard reader (the available driver causes crashes and isn't stable enough)
 - Thunderbolt 3
   - There are some efforts to make it work
   - Will only work if you plug the device before booting up
-  - I was successful to make it load up in OS but you will lose USB functionalities after wake, so it wasnt worth the effort, the DP-alt mode works
+  - I was successful to make it load up in OS but you will lose USB functionalities after wake, so it wasn't worth the effort, the DP-alt mode works
   - I do not own any Thunderbolt 3 device, so I only tested through force_power
-  - Still causes KP ocasionally
+  - Still causes KP occasionally
   - May require to flash a custom firmware in the Ti chip but I am not going to go that far
   - **Not going to fix it**
 - Light Sensor (if there are any, I think some models may but mine doesn't have that)
@@ -99,8 +104,8 @@ A lot of things are working fine as expected:
   - Yes YOU CANNOT output anything from the HDMI/DP/TB3 port
   - The HDMI port is linked to the TB3
   - TB3 and DP are both physically locked to the Nvidia card
-  - The Nvidia card **WILL NEVER WORK**
-  - The Nvidia card is disabled with ACPI
+  - The Nvidia GPU **WILL NEVER WORK**
+  - The Nvidia GPU is disabled with ACPI
     - No outputs then
   - Solutions:
     - AirPlay
@@ -118,13 +123,13 @@ A lot of things are working fine as expected:
   * The battery life is quite bad (~5 hours on a good day)
   * Warms up the bottom of the laptop
   * If anyone has any idea of why that's happening, please open an Issue or make a PR
-* DRM support - not tested/fixed
-  - I dont use iTunes/TV+
+* DRM support -- not tested/fixed
+  - I don't use iTunes/TV+
   - Netflix on Safari may not work (didn't test)
     - Works on Chrome/Firefox just fine
 * Pen Pressure input, only works on 10.11 (you will have to do more work to get this running on 10.11, not covered here)
 * *to be filled when I remember something*
-* Hibernation (didnt test yet)
+* ~~Hibernation (didn't test yet)~~ It works
 
 ## Things I'm trying to fix atm and need help with
 
@@ -136,7 +141,7 @@ A lot of things are working fine as expected:
 
 ---
 
-## Installing macOS (10.13 and later)
+## Installing macOS (10.13 and later) | BigSur works as of the time of writing
 
 ### Preparing your computer
 
@@ -165,76 +170,68 @@ Make sure you're in UEFI mode, I'm not going to help you on legacy installs.
 4. Configure your BIOS setting:
    1. Config
       1. Network
-         1. **Disable all the stacks and Wake On LAN**
-            * Will fix issues with Intel Ethernet in the OS
-            * If you don't disable Wake On LAN you may have sleep issues later on macOS. Fixable but less desirable solution.
-         
+         * **Disable all the stacks and Wake On LAN**
+             * Will fix issues with Intel Ethernet in the OS
+             * If you don't disable Wake On LAN you may have sleep issues later on macOS. Fixable but less desirable solution.
       2. USB
-
-         1. Charge in battery mode
-            1. Can be ON optionally
-
+         * Charge in battery mode
+            * Can be ON optionally
       3. Display
          1. Boot Display Device
-            1. ThinkPad LCD
+             * ThinkPad LCD
          2. **Total Graphics Memory**
-            1. 512MB
-               * Not sure if that's needed, but it's fine as it is
+             * 512MB
+                 * Not sure if that's needed, but it's fine as it is
          3. **Graphics Device**
-            1. Hybrid Graphics
+             * Hybrid Graphics
 
       4. RAID
-         1. **Disabled**
+         1. **Disabled**.
+             * If you set it up before, or had Windows installed on 1 drive with RAID enabled, you'll have to fix that
+                 1. Backup your files
+                 2. Disable RAID
+                 3. Boot Windows
+                 4. It will crash, boot into safe mode
+                 5. Reboot to windows normally
+                 6. You should be good now
 
-            * If you set it up before, or had Windows installed on 1 drive with RAID enabled, you'll have to fix that
-              1. Backup your files
-              2. Disable RAID
-              3. Boot Windows
-              4. It will crash, boot into safe mode
-              5. Reboot to windows normally
-              6. You should be good now
-
-            * If you set it up before, or had drives (2 or more) in RAID mode, macOS will not be able to see them (hardware raid is not supported)
-              * Either add a 4th drive for macOS or disable raid altogether.
+             * If you set it up before, or had drives (2 or more) in RAID mode, macOS will not be able to see them (hardware raid is not supported)
+             * Either add a 4th drive for macOS or disable raid altogether.
 
    2. Security
-
       1. **Security Chip**
          1. Security Chip Selection: Intel PPT
-            * The TPM chip existence creates sleep issues on macOS.
-            * Use this and keep the presence if you're using security chips on Windows
-            * Enabling this will disable Intel TXT
+             * The TPM chip existence creates sleep issues on macOS.
+             * Use this and keep the presence if you're using security chips on Windows
+             * Enabling this will disable Intel TXT
       2. Memory Protection
-         1. Enabled (default)
+         * Enabled (default)
       3. Virtualization
          1. Virtualization Technology
-            1. Enabled (optionally, if you're going to use VMs or other apps using virtualization)
+             * Enabled (optionally, if you're going to use VMs or other apps using virtualization)
          2. VT-d
-            1. Enabled (by default disabled, optionally, if you're going to use some encryption software -like bitlocker- or do some hardware passthrough on other OSes)
+             * Enabled (by default disabled, optionally, if you're going to use some encryption software -like bitlocker- or do some hardware passthrough on other OSes)
       4. I/O Port Access
-         1. Disable hardware you're not going to use. (In my case, SDCard slot, TB3 and ExpressCard and WWAN)
+          * Disable hardware you're not going to use. (In my case, SDCard slot, TB3 and ExpressCard and WWAN)
       5. Anti-Theft
          1. Computrace
             1. Disabled (by default)
                * WARNING: if you choose Permanently Disabled, you will not be able to enable it again
       6. **Secure Boot**
-         1. Secure Boot: Disabled
+          * Secure Boot: Disabled
       7. Intel SGX
-         1. Enabled (default)
+          * Enabled (default)
       8. Device Guard
-         1. Disabled (default)
-
+          * Disabled (default)
    3. Startup
-
       1. UEFI/Legacy Boot
          1. **UEFI Only**
          2. CSM Support
-            *  **NO**
-            * You can enable it but there is really no need to
+             * **NO**
+             * You can enable it but there is really no need to, it also slows down the boot process by a lot
       2. Boot Mode: Quick
 
    4. Restart
-
       1. Exit Saving Changes
 
 5. Reboot and make sure you can boot into Windows or Linux.
@@ -247,7 +244,7 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
 2. Install macOS and get it booting
 3. Add extra stuff from this guide
 
-### [OpenCore Laptop Guide by Dortania](https://dortania.github.io/vanilla-laptop-guide/)
+### [OpenCore Guide by Dortania](https://dortania.github.io/OpenCore-Install-Guide/)
 
 - Please follow the guide properly, and read it fully before doing anything and prepare the needed hardware (you can skip WiFi card replacement).
 
@@ -255,29 +252,28 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
 
 - **Use USB2.0 drives**
 
-- Make sure you have a spare USB keyboard/mouse just in case and a USB type A hub
+- Make sure you have a spare USB keyboard/mouse just in case and a USB type A hub (optional)
 
 - **Changes** that are needed to do from the guide: (the rest should be the same as the guide prescribes)
 
   - You can use [ProperTree](https://www.github.com/corpnewt/ProperTree) on windows/linux to make OC's config.plist
 
   - Gathering Files (from the OpenCore main Guide):
-    - Firmware Drivers
-      - Use `HfsPlus` instead of `VboxHfs`, it's faster and it's Apple's official driver dumped from real Macs firmware.
-      - Do not use `UsbKbDxe`, our keyboard is PS/2
-      - `FwRuntimeServices` is already integrated in the OpenCorePkg zip in future releases.
     - Kexts
-      - You do not need to use SMCSuperIO/LightSensor/BatteryManager
-      - You **MUST** use rehabman's VoodooPS2Controller kext and **NOT** acidanthera's because it's buggy with hard surface trackpads. (;ink in the kext table down bellow)
+      - You do not need to use SMCSuperIO/LightSensor/BatteryManager for now
+      - You must use VoodooPS2 (acidathera) with VoodooRMI from 1Revenger1 (check Laptop Specific section)
       - IntelMausiEthernet from acidandanthera or Mieze
-      - There is no need for USBInjectAll, use `USBMap.kext` from this repo
+      - Use `USBMap.kext` from this repo (no USBInjectAll)
       - You do not need to get all the kexts now, here is the list of the ones you really need for the installer:
-        - VirtualSMC
-        - Lilu
-        - WhateverGreen
-        - IntelMausi
-        - VoodooPS2Controller (rehabman)
-        - USBMap
+         - VirtualSMC
+         - Lilu
+         - WhateverGreen
+         - IntelMausi
+         - VoodooPS2Controller (rehabman)
+         - USBMap
+         - VoodooPS2 (contains other kexts)
+         - VoodooRMI (contains other kexts)
+      - Note: When adding VoodooPS2 and VoodooRMI, you'll get a notification by ProperTree that there is a duplicate VoodooInput, choose yes to disable one of them (having both injected will cause a kernel panic).
     - SSDTs
       - Take from this guide (this one, not the linked)
         - SSDT-XCPM
@@ -285,92 +281,97 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
         - SSDT-USBX
           - From this repo, we do not need to fake EC as we already have it properly named.
     - Tools:
-      - Use OpenCore's OpenShell. ~~[Shell.efi](https://cdn.discordapp.com/attachments/573338611337003018/693559496462565447/Shell.efi)~~ 
-        - ~~Needed for some extra setup. This should be used until Acidanthera releases OpenShell with the next OpenCore releases.~~
+      - Use OpenCore's OpenShell.
 
   - OpenCore Template:
 
     - Note: you do not need to add the files manually in the config (the guide explains why). Just put the files where they should be and you can simply run OC Snapshot (or Clean Snapshot) to populate your config with proper paths for those files. This is covered in the guide in case you didn't follow through.
 
-    - Skylake
-
+    - [Skylake Laptop OpenCore Guide](https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/skylake.html#starting-point)
+   	   - ACPI
+   	   		- Get SSDT-PNLF (for brightness)
+   	   		- DO NOT use SSDT-GPIO (we do not have I2C devices)
+   	   		- DO NOT use SSDT-EC-USBX, use SSDT-USBX from the repo, we have EC properly named
+   	   		- You may skip SSDT-PLUG, use SSDT-XCPM (same difference, but with some extra stuff for power management). You can still use SSDT-PLUG and then use [CPUFriendFriend](https://github.com/corpnewt/CPUFriendFriend) and make your own Power Management Profile.
+      - Booter
+          - Quirks -- in addition to the default setup
+              - `DiscardHibernationMap` = True (may fix hibernation for some)
+              - `ProvideCustomSlide` = False (There is no need to have it enabled, if you have boot issues, enable it)
       - DeviceProperties
-
-        - `PciRoot(0x0)/Pci(0x2,0x0)`
-
-          - Follow [DeviceProperties](https://dortania.github.io/vanilla-laptop-guide/OpenCore/config-laptop.plist/skylake.html#deviceproperties)
-
-            - For Xeon models: Intel HD P530
-
-              - `device-id` = `16190000`
-              - `AAPL,ig-platform-id` = `00001619`
-                - You can try `26190000` and `00002619` combination too
-
-            - For i7 models: Intel HD 530
-
-              - No need for `device-id`
-              - Optional: `AAPL,ig-platform-id` = `00001619`
-
-            - For **BOTH**: (our DVMT-prealloc is small, can't change it either)
-
-              | Key                        | Type   | Value      |
-              | :------------------------- | :----- | :--------- |
-              | `framebuffer-patch-enable` | Number | `1`        |
-              | `framebuffer-stolenmem`    | Data   | `00003001` |
-              | `framebuffer-fbmem`        | Data   | `00009000` |
+         - `PciRoot(0x0)/Pci(0x2,0x0)`
+         		- For 1080p Models
+  	            - For Xeon models: Intel HD P530
+  	              - `device-id` = `16190000`
+  	              - `AAPL,ig-platform-id` = `00001619`
+  	                 - You can try `26190000` and `00002619` combination too
+  	            - For i7 models: Intel HD 530
+  	              - No need for `device-id`
+  	              - Optional: `AAPL,ig-platform-id` = `00001B19`
+  	            - For **BOTH**: (our DVMT-prealloc is small, can't change it either)
+  	
+  	              | Key                        | Type   | Value      |
+  	              | :------------------------- | :----- | :--------- |
+  	              | `framebuffer-patch-enable` | Number | `1`        |
+  	              | `framebuffer-stolenmem`    | Data   | `00003001` |
+  	              | `framebuffer-fbmem`        | Data   | `00009000` |
+  	       - For 4K UHD Models (thanks to [u/TopuzWats](https://www.reddit.com/user/TopuzWats/)'s [post](https://www.reddit.com/r/hackintosh/comments/mec84o/thinkpad_p50_big_sur_opencore/))
+  	       	  - For Xeon models: Intel HD P530 (not tested, need feedback, open an issue)
+  	              - `device-id` = `16190000`
+  	              - `AAPL,ig-platform-id` = `00001619`
+  	                 - You can try `26190000` and `00002619` combination too
+  	            - For i7 models: Intel HD 530
+  	              - No need for `device-id`
+  	              - Optional: `AAPL,ig-platform-id` = `00001B19`
+  	            - For **BOTH**: (your DVMT is large enough)
+  	
+  	              | Key                        | Type   | Value      |
+  	              | :------------------------- | :----- | :--------- |
+  	              | `framebuffer-patch-enable` | Number | `1`        |
+  	              | `enable-max-pixel-clock-override`    | Number   | `1` |
+  	              | `enable-hdmi20`        | Number   | `1` |
+  	              
+  	                  - Note: `enable-hdmi20` does not work on BigSur due to the broken Userspace patching, using `enable-max-pixel-clock-override` fixes 4K issues on BigSur (according to the reddit post)
 
         - `PciRoot(0x0)/Pci(0x1f,0x3)`
-
-          - `layout-id` = `29` (Number)
-
-      - Kernel
-
-        - Quirks
+      
+    - `layout-id` = `29` (Number)
+    
+  - Kernel
+    
+        - Quirks (in addition to the guide's selection)
           - `XhciPortLimit` = `NO` 
             - There is no need for this
           - `AppleCpuPmCfgLock` = `NO`
             - There is no need for this
-
-      - NVRAM
-
+    - Kexts, check the above gathered kexts
+    
+  - NVRAM
+    
         - `4D1EDE05-38C7-4A6A-9CC6-4BCCA8B38C14` (Booter Path)
-          - For those with 4K display:
+          - For those with 4K UHD display:
             - `UIScale` = `02`
         - `7C436110-AB2A-4BBB-A880-FE41995C9F82`
           - `boot-args`
             - `-v debug=0x100 keepsyms=1` 
               - Use this for this install section, you can remove `-v debug=0x100` once we're done.
           - Remove/Keep empty:
-            - `nvda_drv`
-            - `prev-lang:kbd`
+             - `nvda_drv`
+             - `prev-lang:kbd`
+                 - You might change it to `String` with `en-US:0` value, check the guide for other languages
           - `csr-active-config`
-            - Keep it as `00000000` for full SIP (RECOMMENDED)
-            - Keep it as `01000000` for unsigned kext allowing (partial SIP disabling, ONLY FOR TESTING KEXTS LOCALLY)
-            - Keep it as `03000000` to allow unsigned kexts and system files modification (ONLY FOR DEBUGGING PURPOSES, NOT RECOMMENDED)
-
-      - PlatformInfo
-
-        - Use `MacBookPro13,3`
-
-      - UEFI
-
-        - Protocols
-          - AppleSmcIo
-            - Enable this if you're using FileVault2
-
-  - Setting up Input Devices
-
-    - ~~Use **VoodooPS2Controller Rehabman Fork**~~
-      - ~~The Acidanthera one is broken for us~~
-    - Use any VoodooPS2Controller driver (keyboard input only, recommend acidanthera's as it's up to date) **however**:
-      - Disable in the config.plist `VoodooPS2Mouse` and `VoodooPS2Touchpad` so that they do not load
-    - [**VoodooRMI**](https://github.com/VoodooSMBus/VoodooRMI/releases) (with VoodooSMBus)
-      - This is the driver for the touchpad, credit to 1Revenger1 for making it happen
-      - You'll love this.
-
-- Follow the rest of the guide as usual but skip:
-
-  - SSDT-EC (we already have the proper naming)
+             - Keep it as `00000000` for full SIP (RECOMMENDED)
+             - Keep it as `01000000` for unsigned kext allowing (partial SIP disabling, ONLY FOR TESTING KEXTS LOCALLY)
+         - Keep it as `03000000` to allow unsigned kexts and system files modification (ONLY FOR DEBUGGING PURPOSES, NOT RECOMMENDED)
+    
+  - PlatformInfo
+    
+     - Use `MacBookPro13,3`
+     
+  - UEFI
+    
+         - Protocols
+            - AppleSmcIo
+              - Enable this if you're using FileVault2
 
 - When done, make sure you check everything again before starting.
 
@@ -397,21 +398,20 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
       2. While in Finder, click on Finder > Preferences > General > Show these items on the desktop > Hard disks and External disks
       3. You will see your SSD's partitions on the desktop, right click on the macOS partition > Quick Actions > Mount EFI > type in your password when you get the prompt. Your SSD's EFI will show up.
       4. Copy `Your USB's FAT32 partition` > `EFI` > `BOOT` and `OC` to `Your SSD's EFI` > `EFI` > `.`
-         - Go `Your SSD's EFI` > `EFI` > `Boot`, rename OC's BOOTx64.EFI to BOOTxOC.EFI (this is so that it doesn't get overwritten after Windows Updates/Linux Grub2 Updates)
-      5. Reboot to USB's OC
-      6. Select "Shell.efi"
+      5. In your USB, backup `EFI` > `BOOT` > `BOOTx64.EFI` and replace it with `OpenShell.efi` that you renamed to `BOOTX64.EFI`, this way, your laptop will boot to the shell instead of OC
+      6. Boot the USB from your firmware Boot Options
       7. Once you're greeted with the shell
          1. Type `map -b`, usually you'll find the first partition listed is the FAT32 readable partition, should be named `FSX:` where X is a number
-            * In case you have multiple drives with FAT32 partitions your EFI might be something different than FS0, always check the files inside the partition you chose by running `ls`.
+            * In case you have multiple drives with FAT32 partitions your EFI might be something different from FS0, always check the files inside the partition you chose by running `ls`.
          2. Type `FSX:` 
-         3. Type `bcfg boot add 00 FSX:\EFI\BOOT\BOOTxOC.EFI "OpenCore Booter"`
+         3. Type `bcfg boot add 00 FSX:\EFI\OC\OpenCore.EFI "OpenCore"`
             - `bcfg`: Manages the boot and driver options that are stored in NVRAM. -- UEFI Spec sheet
             - `boot`: what bcfg needs to change
             - `add`: add entry
             - `00`: entry order in the list (00 being the very first entry)
             - `FSX:\EFI...`: path to the EFI file
-            - `"OpenCore Booter"`: name of the entry, you can choose whatever you want as long as it's 3 characters long and with the quotes.
-         4. I recommend you run the same commands for `Shell.efi` to make it accessible from the UEFI Boot Menu in case you need to fix/check things.
+            - `"OpenCore"`: name of the entry, you can choose whatever you want as long as it's 3 characters long and with the quotes.
+         4. You can run the same commands for `OpenShell.efi` (with path `\EFI\OC\Tools\OpenShell.efi`) to make it accessible from the UEFI Boot Menu in case you need to fix/check things. (Optional, comes with security risks)
          5. Press Ctrl + Alt + Del and your laptop will reboot
       8. After that a new entry for the BOOTxOC is made and your laptop will boot to OC automatically.
          - Note that in the event of a Windows Update "replaces your EFI" (which it totally does NOT), you can simply check the boot order in the BIOS Setup > Boot and change the order as you see fit, or if suddenly the entry vanishes, you'll have to redo the steps above
@@ -426,61 +426,68 @@ After installing macOS, getting OpenCore to boot, it's time to get the rest of i
 
 ### ACPI Fixes
 
-| SSDT File Name         | Patch(es) to use with (if needed)                            | Reason to use                                                |
-| ---------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| SSDT-BAXX              | - Change Method(_WAK,1,N) to XXAK<br />- Change Method(GBIF,3,N) to XBIF<br />- Change Method(GBST,4,N) to XBST<br />- Change _L17 to XL17<br />- Change BAT1 to BAX1 (use only if you have one battery) | Battery patches to get battery reading in macOS. The SSDT has the patched OperationRegions + Methods, the OC patches rename the original methods to something else so that macOS uses the new patched methods in the SSDT.<br />This SSDT **does not** take in consideration a dual battery setup. If you're using 2 batteries, refer to SSDT-BATC (google). |
-| SSDT-KBD               | - Change Method(\_Q15,0,N) to XQ15<br />- Change Method(\_Q14,0,N) to XQ14<br />- Change Method(\_Q6A,0,N) to XQ6A<br />- Change Method(\_Q16,0,N) to XQ16<br />- Change Method(\_Q64,0,N) to XQ64<br />- Change Method(\_Q66,0,N) to XQ66<br />- Change Method(\_Q67,0,N) to XQ67<br />- Change Method(\_Q68,0,N) to XQ68<br />- Change Method(_Q69,0,N) to XQ69<br /> | Contains Hotkey fixes for Brightness keys, Volume keys and the other keys are all mapped to some Fn key that I totally forgot about. You can map them separately with Karabiners or Keyboard preference panel. |
-| SSDT-NoHybGfx          | *none*                                                       | Disables the Nvidia dGPU following bumblebee guidelines (Credit: Maemo) |
-| SSDT-PNLF              | *none*                                                       | Fixes brightness by adding a PNLF device.                    |
-| SSDT-SBUS-MCHC         | *none*                                                       | Adds SBUS and MCHC devices, needed for macOS.                |
-| SSDT-Thinkpad_Trackpad | *none*                                                       | Contains VoodooPS2Controller settings to fix the TrackPoint jumpiness |
-| SSDT-USBX              | *none*                                                       | Adds USB properties for AppleBusPowerController for the USB ports, helps with the 10 W output support. |
-| SSDT-XCPM              | *none*                                                       | Adds `plugin-type` property to the CPU scope device, helps with CPU Power management. Contains CPUFriend Data set to Power (not Performances). |
-| SSDT-XOSI              | _OSI to XOSI                                                 | Renames the _OSI (Operating System Interface Level) method so that we can add macOS identification in the SSDT, this way, features that would only be enabled if Windows was detected would be also available for macOS. In our case it actually doesn't really matter, but just to be sure that it doesn't limit anything later down the road on UEFI Firmware updates. |
-| *none*                 | Change SAT1 to SATA                                          | To enable proper compatibility with macOS SATA drivers (for power management). You can also use ThirdPartyDrives in config.plist\Kernel\Quirks. |
-| *none*                 | FPU to MATH                                                  | To enable MATH device. macOS look for MATH device.           |
-| *none*                 | Change XHCI to XHC                                           | To disable macOS's auto-attachement to the XHCI device and applying the SMBIOS's native USB port mapping, we don't want that, and we're using our own USBMap anyways. |
+| SSDT File Name             | Patch(es) to use with (if needed)                            | Reason to use                                                |
+| -------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| SSDT-BAXX                  | - Change Method(_WAK,1,N) to XXAK<br />- Change Method(GBIF,3,N) to XBIF<br />- Change Method(GBST,4,N) to XBST<br />- Change _L17 to XL17<br />- Change BAT1 to BAX1 (use only if you have one battery) | Battery patches to get battery reading in macOS. The SSDT has the patched OperationRegions + Methods, the OC patches rename the original methods to something else so that macOS uses the new patched methods in the SSDT.<br />This SSDT **does not** take in consideration a dual battery setup. If you're using 2 batteries, refer to SSDT-BATC (google).<br />This SSDT contains converted EC Registers from >8bits to 8bit chunks for YogaSMC. |
+| ~~SSDT-KBD~~ **OBSOLETE**  | ~~- Change Method(\_Q15,0,N) to XQ15<br />- Change Method(\_Q14,0,N) to XQ14<br />- Change Method(\_Q6A,0,N) to XQ6A<br />- Change Method(\_Q16,0,N) to XQ16<br />- Change Method(\_Q64,0,N) to XQ64<br />- Change Method(\_Q66,0,N) to XQ66<br />- Change Method(\_Q67,0,N) to XQ67<br />- Change Method(\_Q68,0,N) to XQ68<br />- Change Method(_Q69,0,N) to XQ69<br />~~ | ~~Contains Hotkey fixes for Brightness keys, Volume keys and the other keys are all mapped to some Fn key that I totally forgot about. You can map them separately with Karabiners or Keyboard preference panel.~~ **OBSOLETE**. Use YogaSMC. |
+| SSDT-NoHybGfx              | *none*                                                       | Disables the Nvidia dGPU following bumblebee guidelines (Credit: Maemo) |
+| SSDT-PNLF                  | *none*                                                       | Fixes brightness by adding a PNLF device.                    |
+| ~~SSDT-SBUS-MCHC~~         | *none*                                                       | ~~Adds SBUS and MCHC devices, needed for macOS.~~ **DO NOT USE**. It will break VoodooRMI support. |
+| ~~SSDT-Thinkpad_Trackpad~~ | *none*                                                       | ~~Contains VoodooPS2Controller settings to fix the TrackPoint jumpiness.~~**OBSOLETE**. Use VoodooRMI. |
+| SSDT-USBX                  | *none*                                                       | Adds USB properties for AppleBusPowerController for the USB ports, helps with the 10 W output support. |
+| SSDT-XCPM                  | *none*                                                       | Adds `plugin-type` property to the CPU scope device, helps with CPU Power management. Contains CPUFriend Data set to Power (not Performances). |
+| SSDT-XOSI                  | _OSI to XOSI                                                 | Renames the _OSI (Operating System Interface Level) method so that we can add macOS identification in the SSDT, this way, features that would only be enabled if Windows was detected would be also available for macOS. In our case it actually doesn't really matter, but just to be sure that it doesn't limit anything later down the road on UEFI Firmware updates. |
+| *none*                     | Change SAT1 to SATA                                          | To enable proper compatibility with macOS SATA drivers (for power management). You can also use ThirdPartyDrives in config.plist\Kernel\Quirks. |
+| *none*                     | FPU to MATH                                                  | To enable MATH device. macOS look for MATH device.           |
+| *none*                     | Change XHCI to XHC                                           | To disable macOS's auto-attachement to the XHCI device and applying the SMBIOS's native USB port mapping, we don't want that, and we're using our own USBMap anyways. |
+| *none*                     | Instant Wake Fix (_PRW 0x6d, 0x04) to (0x6d, 0x00)           | Fixes Instant wake after sleep caused by the XHCI driver. Thanks to [u/TopuzWats](https://www.reddit.com/user/TopuzWats/) for reminding me! |
 
 #### Kernel Extensions (Kexts)
 
-| Kext                      | Use                                                          | Depends on                                             | Source                                               | Download link                                            |
-| ------------------------- | ------------------------------------------------------------ | ------------------------------------------------------ | ---------------------------------------------------- | -------------------------------------------------------- |
-| Lilu                      | An open source kernel extension bringing a platform for arbitrary kext, library, and program patching throughout the system for macOS. | *none*                                                 | https://github.com/acidanthera/Lilu                  | https://github.com/acidanthera/Lilu/releases             |
-| VirtualSMC                | Advanced Apple SMC emulator in the kernel.                   | Lilu                                                   | https://github.com/acidanthera/VirtualSMC            | https://github.com/acidanthera/VirtualSMC/releases       |
-| WhateverGreen             | Various patches necessary for certain ATI/AMD/Intel/Nvidia GPUs | Lilu                                                   | https://github.com/acidanthera/WhateverGreen         | https://github.com/acidanthera/WhateverGreen/releases    |
-| AppleALC                  | An open source kernel extension enabling native macOS HD audio for not officially supported codecs without any filesystem modifications. | Lilu                                                   | https://github.com/acidanthera/AppleALC              | https://github.com/acidanthera/AppleALC/releases         |
-| USBMap                    | Maps the USB ports by personality and address                | *none*                                                 | Made by [USBMap](https://github.com/corpnewt/USBMap) | *in this repository*                                     |
-| AirportBrcmFixup          | An open source kernel extension providing a set of patches required for non-native Airport Broadcom Wi-Fi cards. | Lilu                                                   | https://github.com/acidanthera/AirportBrcmFixup      | https://github.com/acidanthera/AirportBrcmFixup/releases |
-| CPUFriend                 | A Lilu plug-in for dynamic power management data injection.  | Lilu                                                   | https://github.com/acidanthera/CPUFriend             | https://github.com/acidanthera/CPUFriend/releases        |
-| VoodooI2C <sup>1</sup>    | VoodooI2C is a project consisting of macOS kernel extensions that add support for I2C bus devices. In our Case Fore OpenCore, make sure you put the Dependencies (found in VoodooI2C.kext/Contents/Plugins) in this order: | - VoodooI2CServices<br />- VoodooGPIO<br />- VoodooI2C | https://github.com/alexandred/VoodooI2C              | https://github.com/alexandred/VoodooI2C/releases         |
-| VoodooI2CHID <sup>1</sup> | A satellite kext for VoodooI2C to enable support for I2C-HID support, like the touchscreen. | VoodooI2C                                              | https://github.com/alexandred/VoodooI2C/             | https://github.com/alexandred/VoodooI2C/releases         |
-| NoTouchID                 | Lilu plugin for disabling Touch ID support. Helps with the lag/hang when being asked for password input when using MBP13,1 and later SMBIOSes. | Lilu                                                   | https://github.com/al3xtjames/NoTouchID              | https://github.com/al3xtjames/NoTouchID/releases         |
-| SMCBatteryManager         | VirtualSMC Plugin to enable battery states readings.         | VirtualSMC                                             | https://github.com/acidanthera/VirtualSMC            | https://github.com/acidanthera/VirtualSMC/releases       |
-| SMCProcessor              | VirtualSMC Plugin to enable CPU information readings (Temp, Freq...) | VirtualSMC                                             | https://github.com/acidanthera/VirtualSMC            | https://github.com/acidanthera/VirtualSMC/releases       |
-| VoodooPS2Controller       | Enables PS/2 Support on macOS, make sure you put this kext before VoodooPS2Keyboard. VoodooPS2Mouse and VoodooPS2Trackpad can be removed/disabled. (ProperTree should be able to sort them automatically.) | *none*                                                 | https://github.com/acidanthera/VoodooPS2/            | https://github.com/acidanthera/VoodooPS2/releases        |
-| BrcmBluetoothInjector     | The BrcmBluetoothInjector.kext is a codeless kernel extension which injects the BT hardware data using a plist; it does not contain a firmware uploader. | *none*                                                 | https://github.com/acidanthera/BrcmPatchRAM          | https://github.com/acidanthera/BrcmPatchRAM/releases     |
-| BrcmFirmwareData          | Holds all the configured firmwares for different Broadcom Bluetooth USB devices | BrcmBluetoothInjector                                  | https://github.com/acidanthera/BrcmPatchRAM          | https://github.com/acidanthera/BrcmPatchRAM/releases     |
-| BrcmPatchRAM3             | A macOS driver which applies PatchRAM updates for Broadcom RAMUSB based devices. (Note that BrcmPatchRAM3 is to be used with 10.15, it works with 10.14 but BrcmPatchRAM2 is recommended for that OS version, OpenCore can inject either of them depending on the OS version, make sure you configure it in the config.plist) | - BrcmBluetoothInjector<br />- BrcmFirmwareData        | https://github.com/acidanthera/BrcmPatchRAM          | https://github.com/acidanthera/BrcmPatchRAM/releases     |
-| NVMeFix                   | NVMeFix is a set of patches for the Apple NVMe storage driver, IONVMeFamily. Its goal is to improve compatibility with non-Apple SSDs. It may be used both on Apple and non-Apple computers. | Lilu                                                   | https://github.com/acidanthera/NVMeFix               | https://github.com/acidanthera/NVMeFix/releases          |
-| VoodooRMI                 | Synaptics RMI driver for macOS, touchpad. | VoodooSMBus *(comes with VoodooRMI zip as of writing)* | [VoodooRMI](https://github.com/VoodooSMBus/VoodooRMI/) | [VodoooRMI](https://github.com/VoodooSMBus/VoodooRMI/releases) |
+| Kext                      | Use                                                          | Depends on                                                   | Source                                               | Download link                                            |
+| ------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------------------------------- | -------------------------------------------------------- |
+| Lilu                      | An open source kernel extension bringing a platform for arbitrary kext, library, and program patching throughout the system for macOS. | *none*                                                       | https://github.com/acidanthera/Lilu                  | https://github.com/acidanthera/Lilu/releases             |
+| VirtualSMC                | Advanced Apple SMC emulator in the kernel.                   | Lilu                                                         | https://github.com/acidanthera/VirtualSMC            | https://github.com/acidanthera/VirtualSMC/releases       |
+| WhateverGreen             | Various patches necessary for certain ATI/AMD/Intel/Nvidia GPUs | Lilu                                                         | https://github.com/acidanthera/WhateverGreen         | https://github.com/acidanthera/WhateverGreen/releases    |
+| AppleALC                  | An open source kernel extension enabling native macOS HD audio for not officially supported codecs without any filesystem modifications. | Lilu                                                         | https://github.com/acidanthera/AppleALC              | https://github.com/acidanthera/AppleALC/releases         |
+| USBMap                    | Maps the USB ports by personality and address                | *none*                                                       | Made by [USBMap](https://github.com/corpnewt/USBMap) | *in this repository*                                     |
+| AirportBrcmFixup          | An open source kernel extension providing a set of patches required for non-native Airport Broadcom Wi-Fi cards. | Lilu                                                         | https://github.com/acidanthera/AirportBrcmFixup      | https://github.com/acidanthera/AirportBrcmFixup/releases |
+| CPUFriend                 | A Lilu plug-in for dynamic power management data injection. Will read the Data from the companion kext (CPUFiriendDataProvider) or SSDT (in our case SSDT-XCPM). | Lilu                                                         | https://github.com/acidanthera/CPUFriend             | https://github.com/acidanthera/CPUFriend/releases        |
+| VoodooI2C <sup>1</sup>    | VoodooI2C is a project consisting of macOS kernel extensions that add support for I2C bus devices. In our Case Fore OpenCore, make sure you put the Dependencies (found in VoodooI2C.kext/Contents/Plugins) in this order: | - VoodooI2CServices<br />- VoodooGPIO<br />- VoodooI2C       | https://github.com/alexandred/VoodooI2C              | https://github.com/alexandred/VoodooI2C/releases         |
+| VoodooI2CHID <sup>1</sup> | A satellite kext for VoodooI2C to enable support for I2C-HID support, like the touchscreen. | VoodooI2C                                                    | https://github.com/alexandred/VoodooI2C/             | https://github.com/alexandred/VoodooI2C/releases         |
+| NoTouchID                 | Lilu plugin for disabling Touch ID support. Helps with the lag/hang when being asked for password input when using MBP13,1 and later SMBIOSes. | Lilu                                                         | https://github.com/al3xtjames/NoTouchID              | https://github.com/al3xtjames/NoTouchID/releases         |
+| SMCBatteryManager         | VirtualSMC Plugin to enable battery states readings.         | VirtualSMC                                                   | https://github.com/acidanthera/VirtualSMC            | https://github.com/acidanthera/VirtualSMC/releases       |
+| SMCProcessor              | VirtualSMC Plugin to enable CPU information readings (Temp, Freq...) | VirtualSMC                                                   | https://github.com/acidanthera/VirtualSMC            | https://github.com/acidanthera/VirtualSMC/releases       |
+| VoodooPS2Controller       | Enables PS/2 Support on macOS.                               | *none*                                                       | https://github.com/acidanthera/VoodooPS2/            | https://github.com/acidanthera/VoodooPS2/releases        |
+| BrcmBluetoothInjector     | The BrcmBluetoothInjector.kext is a codeless kernel extension which injects the BT hardware data using a plist; it does not contain a firmware uploader. | *none*                                                       | https://github.com/acidanthera/BrcmPatchRAM          | https://github.com/acidanthera/BrcmPatchRAM/releases     |
+| BrcmFirmwareData          | Holds all the configured firmwares for different Broadcom Bluetooth USB devices | BrcmBluetoothInjector                                        | https://github.com/acidanthera/BrcmPatchRAM          | https://github.com/acidanthera/BrcmPatchRAM/releases     |
+| BrcmPatchRAM3             | A macOS driver which applies PatchRAM updates for Broadcom RAMUSB based devices. (Note that BrcmPatchRAM3 is to be used with 10.15, it works with 10.14 but BrcmPatchRAM2 is recommended for that OS version, OpenCore can inject either of them depending on the OS version, make sure you configure it in the config.plist) | - BrcmBluetoothInjector<br />- BrcmFirmwareData              | https://github.com/acidanthera/BrcmPatchRAM          | https://github.com/acidanthera/BrcmPatchRAM/releases     |
+| NVMeFix                   | NVMeFix is a set of patches for the Apple NVMe storage driver, IONVMeFamily. Its goal is to improve compatibility with non-Apple SSDs. It may be used both on Apple and non-Apple computers. | Lilu                                                         | https://github.com/acidanthera/NVMeFix               | https://github.com/acidanthera/NVMeFix/releases          |
+| VoodooRMI<sup>2</sup>     | Synaptics RMI driver for macOS, touchpad.                    | - VoodooSMBus *(comes with VoodooRMI zip as of writing)*<br />- VoodooPS2Trackpad (from VoodooPS2Controller) | https://github.com/VoodooSMBus/VoodooRMI/            | https://github.com/VoodooSMBus/VoodooRMI/releases        |
+| VoodooSMBUS               | SMBUS Driver. **Use the one provided by VoodooRMI repository.** | *none*                                                       | https://github.com/VoodooSMBus/VoodooRMI/            | https://github.com/VoodooSMBus/VoodooRMI/releases        |
+| BrightnessKeys            | Self-explanatory                                             | Lilu                                                         | https://github.com/acidanthera/BrightnessKeys        | https://github.com/acidanthera/BrightnessKeys/releases   |
+| HibernationFixup          | A Lilu plugin intended to fix hibernation compatibility issues | Lilu                                                         | https://github.com/acidanthera/HibernationFixup      | https://github.com/acidanthera/HibernationFixup/releases |
 
-<sup>1</sup> : Only use this if you have a touchscreen and you want to use it with macOS. Not really the best way o interact with macOS as the driver will turn the touchscreen into a giant trackpad which is uncomfortable if you're going to invoke Launchpad or the like. Not really needed.
+#### Note:
 
-#### Note: 
+<sup>1</sup> : Only use this if you have a touchscreen and you want to use it with macOS. Not really the best way to interact with macOS as the driver will turn the touchscreen into a giant trackpad which is uncomfortable if you're going to invoke Launchpad or the like. Not really needed. Contains VoodooInput which will conflict with VoodooPS2 and VoodooRMI, keep VoodooInput from VoodooRMI.
 
-As of writing these things are happening:
+<sup>2</sup> : Adding VoodooRMI will cause ProperTree to show you an error message about Duplicate Kexts (VoodooInput in this case), you need to disable one of them, selecting "Yes" in the ProperTree prompt will do that for you.
 
-- VoodooI2C will be VoodooInput reliant, make sure you load VoodooInput before VoodooI2C, however from what I last tried, it doesn't work well
-- VoodooRMI comes with VoodooInput built in, when you add it to your config, make sure you use only one instance of VoodooInput, preferably the one that comes with VoodooRMI if you're not using it with anything else
-  - VoodooInput comes bundeled with:
-    - VoodooPS2
-    - VoodooI2C
-    - VoodooRMI (+SMBUS)
-  - Only use one of the instances and delete/disable the rest.
-- An intel Wifi driver is on the work, no promises though
-- *to be added if anything*
+<sup>2</sup> : This kexts contains plugin kexts like RMISMBUS and RMII2C, disable the I2C one.
 
 You should be all done for now. All of these patches will be in `oc-additions.plist`. You will have to merge them in your config.plist that you made earlier with the OpenCore guide.
+
+#### For intel WiFi:
+
+| Kext                   | Use                                | Depends on | Source                                                      | Download Link                                                |
+| ---------------------- | ---------------------------------- | ------ | ----------------------------------------------------------- | ------------------------------------------------------------ |
+| IntelBluetoothFirmware | Intel...Bluetooth Firmware package | *none* (but requires IntelBluetoothInjector loaded before it) |https://github.com/OpenIntelWireless/IntelBluetoothFirmware | https://github.com/OpenIntelWireless/IntelBluetoothFirmware/releases |
+| IntelBluetoothInjector | Injects intel bluetooth IDs into the system to make it load. | *none* |https://github.com/OpenIntelWireless/IntelBluetoothFirmware | https://github.com/OpenIntelWireless/IntelBluetoothFirmware/releases |
+| AirportItlwm<sup>3</sup> | WiFi driver that uses RE's IO80211. Works with native WiFi menu. | *none* (but requires IO80211, which is already a system kext) |https://github.com/OpenIntelWireless/itlwm/ | https://github.com/OpenIntelWireless/itlwm/releases |
+| Itlwm<sup>3</sup> (non-AirPort) | Same as the above but requires HeliPort (from the same repository) to manage networks. | *none* |https://github.com/OpenIntelWireless/itlwm/ | https://github.com/OpenIntelWireless/itlwm/releases |
+
+<sup>3</sup> : **DO NOT** install both, use only one of them.
 
 ---
 
@@ -492,17 +499,17 @@ No (not now)
 
 ### USB port mapping
 
-| Port      | Address    | Physical Location                    | Internal/External | Enabled/Disabled in USBMap |
-| --------- | ---------- | ------------------------------------ | ----------------- | -------------------------- |
-| HSP0/SSP0 | `00000001` | Back Port - Power Share              | E                 | E                          |
-| HSP1/SSP1 | `00000002` | Back Port - next to Ethernet Port    | E                 | E                          |
-| HSP4/SSP4 | `00000005` | Right Port - next to mDP             | E                 | E                          |
-| HSP5/SSP5 | `00000006` | Right Port - next to 3.5mm jack port | E                 | E                          |
-| HSP7      | `00000008` | Integrated Camera module             | I                 | E                          |
-| HSP8      | `00000009` | Fingerprint Sensor                   | I                 | D                          |
-| HSP9      | `0000000A` | Wacom Touchscreen + Pen              | I                 | E                          |
-| HSPC      | `0000000F` | X-Rite Pantone Color Sensor          | I                 | D                          |
-| HSPD      | `0000000E` | Bluetooth USB Port                   | I                 | E                          |
+| Port      | Address               | Physical Location                    | Internal/External | Enabled/Disabled in USBMap |
+| --------- | --------------------- | ------------------------------------ | ----------------- | -------------------------- |
+| HSP0/SSP0 | `00000001`|`00000011` | Back Port - Power Share              | E                 | E/E                        |
+| HSP1/SSP1 | `00000002`|`00000012` | Back Port - next to Ethernet Port    | E                 | E/E                        |
+| HSP4/SSP4 | `00000005`|`00000015` | Right Port - next to mDP             | E                 | E/E                        |
+| HSP5/SSP5 | `00000006`|`00000016` | Right Port - next to 3.5mm jack port | E                 | E/E                        |
+| HSP7      | `00000008`            | Integrated Camera module             | I                 | E                          |
+| HSP8      | `00000009`            | Fingerprint Sensor                   | I                 | D                          |
+| HSP9      | `0000000A`            | Wacom Touchscreen + Pen              | I                 | E                          |
+| HSPC      | `0000000F`            | X-Rite Pantone Color Sensor          | I                 | D                          |
+| HSPD      | `0000000E`            | Bluetooth USB Port                   | I                 | E                          |
 
 ### WiFi Card replacement
 
@@ -526,6 +533,7 @@ As of now there are a lot of WiFi cards that are compatible:
 | Dell's DW1560<br />Lenovo's PN 04X6020       | Expensive AF now because they're not in production anymore.<br />Lenovo's part **NEEDS** dremeling, not really recommended if you don't know how to do that. |
 | Dell's DW1820A<br />Lenovo's 00JT494/00JT493 | Cheap now, works.<br />~~**Requires** adding `pci-aspm-default` = `0` (number) to its device path under DeviceProperties (for my case it's under `PciRoot(0x0)/Pci(0x1c,0x0)/Pci(0x0,0x0)`, you can check yours by using gfxutil from Acidanther's repo, however technically, it should be the same)~~<br />Has NaTiVe linux support which is 10/10<br />There is another taping solution from here: [tmx thread](https://www.tonymacx86.com/threads/thinkpad-p50-sierra-10-12-6.229084/post-2083809)<br />Bluetooth firmware fixed with the latest BrcmPatchRam from acidanthera. <br /> **Update:** Use the taping solution, the aspm trick doesn't always work |
 | Apple's BCM94360CS2 or BCM943602CS           | CS2 is limited to 867Mbps on AC and up to 300Mbps on N (2.4Ghz), 2CS goes up to 1.3Gbps.<br />CS2 uses 2 antennae, 2CS needs 3 antennae! (You will have to use one of the WWAN antennae)<br />Technically any card that would fit there would work, CD variant can't because of the antenna connector (M.FL vs MHF4, we need the latter, you will have to use converters)<br />You will have to use a 12 + 6 to A/E adapter like shown in this [album](https://imgur.com/a/wRwnmDV). Since I don't use a WWAN, it made a snug fit there.<br />I got the card for $10, now the price has gone up. |
+| Intel WiFi cards                             | Yes: [Check here](https://dortania.github.io/OpenCore-Install-Guide/ktext.html#intel) and [here]([OpenIntelWireless/itlwm: Intel Wi-Fi Drivers for macOS (github.com)](https://github.com/OpenIntelWireless/itlwm)). You will not have AWDL support (AirDrop, Instant Hotspot...) but you'll get basic networking and internet. |
 | *all of the above*                           | You might want to `brcmfx-country=#a` to unlock some bands and get higher speeds. (You may also put your own country identifier) |
 
 ### HiDPI Resolutions (for 4k screens users)
@@ -545,6 +553,17 @@ By default, if you get proper screen resolution after macOS install, the screen 
     - You can completely disable it by rebooting to the recovery and running `csrutil disable`
     - You can completely disable it by editing `config.plist`\\`NVRAM`\\`7C436110-AB2A-4BBB-A880-FE41995C9F8`\\`csr-active-confg` = `E7030000` (in ProperTree or Xcode, if you're doing it with a text editor type `5wMAAA==`) -- not recommended by OC.
       - Reboot to macOS
+
+### Hibernation:
+
+Some may start using macOS a lot on this device because it's that good, which may require you to hibernate your device from time to time. By enabled `DiscardHibernationMap` in Booter > Quirks, you'll be able to successfully enter and exit hibernation (as far as my testing goes). You will also need to set some arguments for HibernationFixup to get it working smoothly following their boot arguments [here](https://github.com/acidanthera/HibernationFixup#boot-args). For my preferences, I chose the following:
+
+- EnableAutoHibernation `1`
+- WhenLidIsClosed `2`
+- WhenExternalPowerIsDisconnected `4`(so that it will stay in sleep S3 when it's plugged in)
+- WhenBatteryAtCriticalLevel `32`
+
+Which gives me a sum of `39` and I use it with `hbfx-ahbm=` boot argument.
 
 ---
 
