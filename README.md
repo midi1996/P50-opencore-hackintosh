@@ -289,11 +289,11 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
 
     - [Skylake Laptop OpenCore Guide](https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/skylake.html#starting-point)
        - ACPI
-       	   		- Get SSDT-PNLF (for brightness)
-       	   		- DO NOT use SSDT-GPIO (we do not have I2C devices)
-       	   		- DO NOT use SSDT-EC-USBX, use SSDT-USBX from the repo, we have EC properly named
-       	   		- You may skip SSDT-PLUG, use SSDT-XCPM (same difference, but with some extra stuff for power management). You can still use SSDT-PLUG and then use [CPUFriendFriend](https://github.com/corpnewt/CPUFriendFriend) and make your own Power Management Profile.
-      - Booter
+       	  - Get SSDT-PNLF (for brightness)
+       	  - DO NOT use SSDT-GPIO (we do not have I2C devices)
+       	  - DO NOT use SSDT-EC-USBX, use SSDT-USBX from the repo, we have EC properly named
+       	  - You may skip SSDT-PLUG, use SSDT-XCPM (same difference, but with some extra stuff for power management). You can still use SSDT-PLUG and then use [CPUFriendFriend](https://github.com/corpnewt/CPUFriendFriend) and make your own Power Management Profile.
+       - Booter
           - Quirks -- in addition to the default setup
               - `DiscardHibernationMap` = True (may fix hibernation for some)
               - `ProvideCustomSlide` = False (There is no need to have it enabled, if you have boot issues, enable it)
@@ -308,9 +308,10 @@ Ok, so I know that some of you may have a macOS machine nearby and some may not 
               - `AAPL,ig-platform-id` = `00001619`
                 - You can try `26190000` and `00002619` combination too
 
-               - For i7 models: Intel HD 530
-                   - No need for `device-id`
-                   - Optional: `AAPL,ig-platform-id` = `00001B19`
+            - For i7 models: Intel HD 530
+
+               - No need for `device-id`
+               - Optional: `AAPL,ig-platform-id` = `00001B19`
 
             - For **BOTH**: (our DVMT-prealloc is small, can't change it either)
 
@@ -436,11 +437,11 @@ After installing macOS, getting OpenCore to boot, it's time to get the rest of i
 
 | SSDT File Name             | Patch(es) to use with (if needed)                            | Reason to use                                                |
 | -------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| SSDT-BAXX                  | - Change Method(_WAK,1,N) to XXAK<br />- Change Method(GBIF,3,N) to XBIF<br />- Change Method(GBST,4,N) to XBST<br />- Change _L17 to XL17<br />- Change BAT1 to BAX1 (use only if you have one battery) | Battery patches to get battery reading in macOS. The SSDT has the patched OperationRegions + Methods, the OC patches rename the original methods to something else so that macOS uses the new patched methods in the SSDT.<br />This SSDT **does not** take in consideration a dual battery setup. If you're using 2 batteries, refer to SSDT-BATC (google).<br />This SSDT contains converted EC Registers from >8bits to 8bit chunks for YogaSMC. |
-| ~~SSDT-KBD~~ **OBSOLETE**  | ~~- Change Method(\_Q15,0,N) to XQ15<br />- Change Method(\_Q14,0,N) to XQ14<br />- Change Method(\_Q6A,0,N) to XQ6A<br />- Change Method(\_Q16,0,N) to XQ16<br />- Change Method(\_Q64,0,N) to XQ64<br />- Change Method(\_Q66,0,N) to XQ66<br />- Change Method(\_Q67,0,N) to XQ67<br />- Change Method(\_Q68,0,N) to XQ68<br />- Change Method(_Q69,0,N) to XQ69<br />~~ | ~~Contains Hotkey fixes for Brightness keys, Volume keys and the other keys are all mapped to some Fn key that I totally forgot about. You can map them separately with Karabiners or Keyboard preference panel.~~ **OBSOLETE**. Use YogaSMC. |
+| ~~SSDT-BAXX~~ (**OBSOLETE DO NOT USE**)                  | ~~- Change Method(_WAK,1,N) to XXAK<br />- Change Method(GBIF,3,N) to XBIF<br />- Change Method(GBST,4,N) to XBST<br />- Change _L17 to XL17<br />- Change BAT1 to BAX1 (use only if you have one battery)~~ | ~~Battery patches to get battery reading in macOS. The SSDT has the patched OperationRegions + Methods, the OC patches rename the original methods to something else so that macOS uses the new patched methods in the SSDT.<br />This SSDT **does not** take in consideration a dual battery setup. If you're using 2 batteries, refer to SSDT-BATC (google).<br />This SSDT contains converted EC Registers from >8bits to 8bit chunks for YogaSMC.~~ |
+| ~~SSDT-KBD~~ (**OBSOLETE DO NOT USE**)  | ~~- Change Method(\_Q15,0,N) to XQ15<br />- Change Method(\_Q14,0,N) to XQ14<br />- Change Method(\_Q6A,0,N) to XQ6A<br />- Change Method(\_Q16,0,N) to XQ16<br />- Change Method(\_Q64,0,N) to XQ64<br />- Change Method(\_Q66,0,N) to XQ66<br />- Change Method(\_Q67,0,N) to XQ67<br />- Change Method(\_Q68,0,N) to XQ68<br />- Change Method(_Q69,0,N) to XQ69<br />~~ | ~~Contains Hotkey fixes for Brightness keys, Volume keys and the other keys are all mapped to some Fn key that I totally forgot about. You can map them separately with Karabiners or Keyboard preference panel.~~ **OBSOLETE**. Use YogaSMC. |
 | SSDT-NoHybGfx              | *none*                                                       | Disables the Nvidia dGPU following bumblebee guidelines (Credit: Maemo) |
 | SSDT-PNLF                  | *none*                                                       | Fixes brightness by adding a PNLF device.                    |
-| ~~SSDT-SBUS-MCHC~~         | *none*                                                       | ~~Adds SBUS and MCHC devices, needed for macOS.~~ **DO NOT USE**. It will break VoodooRMI support. |
+| ~~SSDT-SBUS-MCHC~~ (**DO NOT USE**)        | *none*                                                       | ~~Adds SBUS and MCHC devices, needed for macOS.~~ **DO NOT USE**. It will break VoodooRMI support. |
 | ~~SSDT-Thinkpad_Trackpad~~ | *none*                                                       | ~~Contains VoodooPS2Controller settings to fix the TrackPoint jumpiness.~~**OBSOLETE**. Use VoodooRMI. |
 | SSDT-USBX                  | *none*                                                       | Adds USB properties for AppleBusPowerController for the USB ports, helps with the 10 W output support. |
 | SSDT-XCPM                  | *none*                                                       | Adds `plugin-type` property to the CPU scope device, helps with CPU Power management. Contains CPUFriend Data set to Power (not Performances). |
@@ -476,6 +477,7 @@ After installing macOS, getting OpenCore to boot, it's time to get the rest of i
 | BrightnessKeys            | Self-explanatory                                             | Lilu                                                         | https://github.com/acidanthera/BrightnessKeys        | https://github.com/acidanthera/BrightnessKeys/releases       |
 | HibernationFixup          | A Lilu plugin intended to fix hibernation compatibility issues | Lilu                                                         | https://github.com/acidanthera/HibernationFixup      | https://github.com/acidanthera/HibernationFixup/releases     |
 | YogaSMC                   | Support for a lot of things including: Battery limiter, Fan Speed reading, Hotkeys... | VirtualSMC                                                   | https://github.com/zhen-zen/YogaSMC                  | https://github.com/zhen-zen/YogaSMC/releases (or https://github.com/zhen-zen/YogaSMC/actions for latest commits) |
+| ECEnabler                   | Allows reading Embedded Controller fields over 1 byte long, vastly reducing the amount of ACPI modification needed (if any) for working battery status. | Lilu                                                   | https://github.com/1Revenger1/ECEnabler                  | https://github.com/1Revenger1/ECEnabler/releases |
 
 #### Note:
 
