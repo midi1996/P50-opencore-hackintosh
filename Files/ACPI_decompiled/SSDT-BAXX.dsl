@@ -1,23 +1,8 @@
 /*
- * Intel ACPI Component Architecture
- * AML/ASL+ Disassembler version 20201113 (64-bit version)
- * Copyright (c) 2000 - 2020 Intel Corporation
- * 
- * Disassembling to symbolic ASL+ operators
- *
- * Disassembly of /Users/midi/Gits/P50-opencore-hackintosh/Files/ACPI_compiled/SSDT-BAXX.aml, Sun Mar 28 11:49:12 2021
- *
- * Original Table Header:
- *     Signature        "SSDT"
- *     Length           0x00000BD0 (3024)
- *     Revision         0x02
- *     Checksum         0x20
- *     OEM ID           "hack"
- *     OEM Table ID     "batt"
- *     OEM Revision     0x00000000 (0)
- *     Compiler ID      "INTL"
- *     Compiler Version 0x20200214 (538968596)
- */
+
+This file is just for archiving sake, do not use as ECEnabler handles EC registery reading.
+
+*/
 DefinitionBlock ("", "SSDT", 2, "hack", "batt", 0x00000000)
 {
     External (_SB_.LID_, DeviceObj)
